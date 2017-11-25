@@ -1,3 +1,14 @@
+# Copyright (C) 2017 Individual contributors
+# This program is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or (at your option)
+# any later version.  This program is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+# Public License for more details.  You should have received a copy of the GNU
+# General Public License along with this program.  If not, see
+# <http://www.gnu.org/licenses/>.
+
 prevcounts <- function(N, N_H, N_testR, N_R, DE_H = 1, DE_R = 1) {
   if (sum(N_H > N) > 0 | sum(N_R > N) > 0) {
     stop("sample subset larger than total sample")
@@ -446,20 +457,20 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   for (i in c(1:no_s)) {
     survey_no[(i * no_s - (no_s - 1)):(i * no_s)] <- c(i, rep("", times = (no_s -
                                                                              1)))
-    out_I_Est[(i * no_s - (no_s - 1)):(i * no_s)] <- c(round(I_Est[i], digits = 5),
+    out_I_Est[(i * no_s - (no_s - 1)):(i * no_s)] <- c(round(I_Est[i], digits = 6),
                                                        rep("", times = (no_s - 1)))
-    out_RSE_I[(i * no_s - (no_s - 1)):(i * no_s)] <- c(round(RSE_I[i], digits = 5),
+    out_RSE_I[(i * no_s - (no_s - 1)):(i * no_s)] <- c(round(RSE_I[i], digits = 6),
                                                        rep("", times = (no_s - 1)))
     
     if (Boot == FALSE) {
       out_RSE_I.infSS[(i * no_s - (no_s - 1)):(i * no_s)] <- c(round(RSE_I.infSS[i],
-                                                                     digits = 5), rep("", times = (no_s - 1)))
+                                                                     digits = 6), rep("", times = (no_s - 1)))
     }
     
     out_CI_I_lo[(i * no_s - (no_s - 1)):(i * no_s)] <- c(round(CI_I_Mat[i, 1],
-                                                               digits = 5), rep("", times = (no_s - 1)))
+                                                               digits = 6), rep("", times = (no_s - 1)))
     out_CI_I_up[(i * no_s - (no_s - 1)):(i * no_s)] <- c(round(CI_I_Mat[i, 2],
-                                                               digits = 5), rep("", times = (no_s - 1)))
+                                                               digits = 6), rep("", times = (no_s - 1)))
     for (j in c(1:no_s)) {
       delta_code[(i * no_s - (no_s - j))] <- paste(i, j, sep = " vs ")
     }
@@ -507,22 +518,27 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   }
   
   
-  out_deltaI_Est <- round(deltaI_Est_Vec, digits = 5)
-  out_RSE_deltaI <- round(RSE_deltaI, digits = 5)
+  out_deltaI_Est <- round(deltaI_Est_Vec, digits = 6)
+  out_RSE_deltaI <- round(RSE_deltaI, digits = 6)
   
   if (Boot == FALSE) {
-    out_RSE.deltaI.infSS <- round(out_RSE.deltaI.infSS, digits = 5)
+    out_RSE.deltaI.infSS <- round(out_RSE.deltaI.infSS, digits = 6)
     out_p_value.infSS <- ifelse(p_value.infSS < 0.001, "<0.0001", round(p_value.infSS,
-                                                                        digits = 5))
+                                                                        digits = 6))
   }
   
-  out_CI_deltaI_Mat <- round(CI_deltaI_Mat, digits = 5)
-  out_p_value <- ifelse(p_value < 0.001, "<0.0001", round(p_value, digits = 5))
+  out_CI_deltaI_Mat <- round(CI_deltaI_Mat, digits = 6)
+  out_p_value <- ifelse(p_value < 0.001, "<0.0001", round(p_value, digits = 6))
   
-  MDRI.CI <- round(365.25 * data.frame(CI.low = stats::qnorm(alpha/2, mean = MDRI, sd = sqrt(Var_MDRI)),
-                                       CI.up = stats::qnorm(1 - alpha/2, mean = MDRI, sd = sqrt(Var_MDRI))), digits = 3)
-  FRR.CI <- round(data.frame(CI.low = stats::qnorm(alpha/2, mean = FRR, sd = sqrt(Var_FRR)),
-                             CI.up = stats::qnorm(1 - alpha/2, mean = FRR, sd = sqrt(Var_FRR))), digits = 4)
+  MDRI.CI <- round(365.25 * dplyr::data_frame(
+    PE = MDRI,
+    CI.LB = stats::qnorm(alpha/2, mean = MDRI, sd = sqrt(Var_MDRI)),
+    CI.UB = stats::qnorm(1 - alpha/2, mean = MDRI, sd = sqrt(Var_MDRI))), digits = 4)
+  FRR.CI <- round(dplyr::data_frame(
+    PE = FRR,
+    CI.LB = stats::qnorm(alpha/2, mean = FRR, sd = sqrt(Var_FRR)),
+    CI.UB = stats::qnorm(1 - alpha/2, mean = FRR, sd = sqrt(Var_FRR))
+    ), digits = 4)
   
   if (BMest == "same.test") {
     MDRI.CI <- MDRI.CI[1, ]
@@ -538,15 +554,15 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
     ARI <- 1 - exp(-as.numeric(out_I_Est))
     ARI.CI.low <- 1 - exp(-as.numeric(out_CI_I_lo))
     ARI.CI.up <- 1 - exp(-as.numeric(out_CI_I_up))
-    ARI.list <- round(data.frame(ARI = ARI, ARI.CI.low = ARI.CI.low, ARI.CI.up = ARI.CI.up),
-                      digits = 4)
+    ARI.list <- round(dplyr::data_frame(ARI = ARI, CI.LB = ARI.CI.low, CI.UB = ARI.CI.up),
+                      digits = 6)
     if (Boot == FALSE) {
       output <- list(Incidence.Statistics = data.frame(Incidence = out_I_Est,
-                                                       `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS),
+                                                       CI.LB = out_CI_I_lo, CI.UB = out_CI_I_up, RSE.I = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS), #SE.I = out_RSE_I*out_I_Est, 
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     } else {
       output <- list(Incidence.Statistics = data.frame(Incidence = out_I_Est,
-                                                       `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I, Cov.PrevH.I = BS_I_PrevH_cov_vec[[1]],
+                                                       CI.LB = out_CI_I_lo, CI.UB = out_CI_I_up, RSE.I = out_RSE_I, Cov.PrevH.I = BS_I_PrevH_cov_vec[[1]], ##SE.I = out_RSE_I*out_I_Est, 
                                                        Cor.PrevH.I = BS_I_PrevH_cor_vec[[1]]),
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     }
@@ -585,10 +601,16 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
                    MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
   }
   
-  incstat_tab <- dplyr::as_data_frame(output$Incidence.Statistics)
+  inc_tab <- dplyr::as_data_frame(output$Incidence.Statistics)
+  ari_tab <- dplyr::as_data_frame(output$Annual.Risk.of.Infection)
+  
+  function_output <- list(Incidence = inc_tab,
+                           Annual.Risk.Infection = ari_tab,
+                           MDRI.CI = MDRI.CI,
+                           FRR.CI = FRR.CI)
   
   #return(output)
-  return(incstat_tab)
+  return(function_output)
 }
 
 inccounts <- function(N, N_H, N_testR, N_R, DE_H = 1, DE_R = 1, BS_Count = 10000,

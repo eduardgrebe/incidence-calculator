@@ -1,4 +1,4 @@
-# Copyright (C) 2017 Alex Welte, Eduard Grebe, Lamin Juwara
+# Copyright (C) 2017 Individual contributors
 # This program is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published by the
 # Free Software Foundation, either version 3 of the License, or (at your option)
@@ -46,49 +46,34 @@ shinyServer(function(input, output){
       need(input$FRR <= 100, 'Please provide a valid value for FRR'),
       need(input$BigT, 'Please provide a value for the cut-off time'),
       need(input$BigT > 120, 'Please provide a valid value for the cut-off time (>120)'),
-      need(!is.na(input$cov_PrevH_PrevR), "Please provide a valid covariance for PrevH and PrevR (default: 0)")
+      need(!is.na(input$cov_PrevH_PrevR), "Please provide a valid covariance for PrevH and PrevR (default: 0)"),
+      need(input$n_bootstraps >= 10000, "Bootstrapping iterations must be in the range [10,000,500,000]"),
+      need(input$n_bootstraps <= 500000, "Bootstrapping iterations must be in the range [10,000,500,000]")
     )
     incprops(PrevH = input$PrevH/100, RSE_PrevH = input$RSE_PrevH/100,
-                                PrevR = input$PrevR/100, RSE_PrevR = input$RSE_PrevR/100,
-                                MDRI = input$MDRI, RSE_MDRI = input$RSE_MDRI/100,
-                                FRR = input$FRR/100, RSE_FRR = input$RSE_FRR/100,
-                                BigT = input$BigT,
+             PrevR = input$PrevR/100, RSE_PrevR = input$RSE_PrevR/100,
+             MDRI = input$MDRI, RSE_MDRI = input$RSE_MDRI/100,
+             FRR = input$FRR/100, RSE_FRR = input$RSE_FRR/100,
+             BigT = input$BigT,
              Boot = TRUE,
-             BS_Count = 100000,
-                        Covar_HR = input$cov_PrevH_PrevR)
+             BS_Count = input$n_bootstraps,
+             Covar_HR = input$cov_PrevH_PrevR)
   }) 
   
-  # Produce an output table value. redundant on this version
-  # incidence_out <- reactive(
-  #   incidence_calc()
-  #   )
-  
-  output$incest_tab <- renderTable(digits = 6, {
-    incidence_calc()
+    output$incidence_table <- renderTable(digits = 6, {
+      incidence_calc()$Incidence
+    })
+
+  output$ari_table <- renderTable(digits = 6, {
+    incidence_calc()$Annual.Risk.Infection
+  })
+
+  output$mdri_table <- renderTable(digits = 2, {
+    incidence_calc()$MDRI.CI
+  })
+
+  output$frr_table <- renderTable(digits = 4, {
+    incidence_calc()$FRR.CI
   })
   
-  # output$incest_rest <- renderText({
-  #   print(incidence_out$MDRI.CI)
-  #   print(incidence_out$FRR.CI)
-  # })
-  
-  
-  
-   	 	 	 	
-  # output$downloadData2 <- downloadHandler(
-  #   filename = function() {
-  #     paste("resultTable-", Sys.Date(), ".csv", sep="")
-  #   },
-  #   content = function(file) {
-  #     temp <- incidence_calc()
-  #     temp <- data.frame("Parameter" = names(temp), 
-  #                      "Value"=c(temp$Incidence,temp$CI.low,temp$CI.up,temp$RSE,
-  #                                temp$ARI,temp$ARI.CI.low,temp$ARI.CI.up))
-  #     #tt=xtabs(Value~Parameter,data = temp) 
-  #     write.csv(temp, file)
-  #   }
-  # )
-
- 
-
 })
