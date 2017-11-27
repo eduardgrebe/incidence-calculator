@@ -46,7 +46,7 @@ fluidPage(
              numericInput("cor_PrevH_PrevR",
                           label = h5("Cor prev. & prop. recent"),
                           value = 0,
-                          min = 0, max = 1, step = 0.01)
+                          min = -1, max = 1, step = 0.01)
            ),
            wellPanel(
              numericInput("n_bootstraps",
