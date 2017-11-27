@@ -56,7 +56,7 @@ I_EST <- function(prevH, prevR, mdri, frr, bigt) {
 BS_SURVEY_ESTS <- function(prevH, prevR, mdri, frr, bs_count, bs_var_prevH, bs_var_prevR,
                            bs_var_mdri, bs_var_frr, covar_HR, cor_HR) {
   Mu <- c(prevH, prevR, mdri, frr)
-  if (!is.null(cor_HR)) {covar_HR <- bs_var_prevH * bs_var_prevR * cor_HR}
+  if (!is.null(cor_HR)) {covar_HR <- sqrt(bs_var_prevH * bs_var_prevR) * cor_HR}
   sigma <- matrix(c(bs_var_prevH, covar_HR, 0, 0, covar_HR, bs_var_prevR, 0, 0,
                     0, 0, bs_var_mdri, 0, 0, 0, 0, bs_var_frr), nrow = 4, ncol = 4)
   # bs_var_prevH, bs_var_prevR, and so on are...?empirical, observed variance of
