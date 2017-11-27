@@ -43,9 +43,10 @@ fluidPage(
                           label = h5("RSE on prop. recent (%)"),
                           value = 9.8,
                           step = 0.1, min=0, max = 100),
-             numericInput("cov_PrevH_PrevR",
-                          label = h5("Cov prev. & prop. recent"),
-                          value = 0)
+             numericInput("cor_PrevH_PrevR",
+                          label = h5("Cor prev. & prop. recent"),
+                          value = 0,
+                          min = 0, max = 1, step = 0.01)
            ),
            wellPanel(
              numericInput("n_bootstraps",
@@ -91,7 +92,10 @@ fluidPage(
                        
                        tabPanel("Documentation", 
                                 #value='tab4_val', id = 'tab4',
-                                wellPanel( p("The documentation will go here"))
+                                wellPanel(p("The documentation will go here"),
+                                          p(HTML("
+                                            <p> This is an HTML page </p>
+                                          ")))
                                            
                        ),
                        tabPanel("About", 

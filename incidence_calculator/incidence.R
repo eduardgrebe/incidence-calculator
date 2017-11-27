@@ -54,8 +54,9 @@ I_EST <- function(prevH, prevR, mdri, frr, bigt) {
 
 # BOOTSTRAPPING EDF OF INPUT PARAMETERS TO incprops() FUNCTION
 BS_SURVEY_ESTS <- function(prevH, prevR, mdri, frr, bs_count, bs_var_prevH, bs_var_prevR,
-                           bs_var_mdri, bs_var_frr, covar_HR) {
+                           bs_var_mdri, bs_var_frr, covar_HR, cor_HR) {
   Mu <- c(prevH, prevR, mdri, frr)
+  if (!is.null(cor_HR)) {covar_HR <- bs_var_prevH * bs_var_prevR * cor_HR}
   sigma <- matrix(c(bs_var_prevH, covar_HR, 0, 0, covar_HR, bs_var_prevR, 0, 0,
                     0, 0, bs_var_mdri, 0, 0, 0, 0, bs_var_frr), nrow = 4, ncol = 4)
   # bs_var_prevH, bs_var_prevR, and so on are...?empirical, observed variance of
@@ -124,7 +125,7 @@ DM_VAR_deltaI.infSS <- function(BMest, fot_mdri1, fot_frr1, fot_mdri2, fot_frr2,
 # UPDATED incprops
 incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count = 10000,
                      alpha = 0.05, BMest = "same.test", MDRI, RSE_MDRI, FRR, RSE_FRR, BigT = 730,
-                     Covar_HR = 0) {
+                     Covar_HR = 0, cor_HR = NULL) {
   
   
   stopifnot(PrevH <= 1 & PrevH >= 0)
@@ -205,11 +206,14 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   } else {
     RSE_FRR = RSE_FRR
   }
+  ### !!!!
   if (length(Covar_HR) == 1) {
     Covar_HR <- rep(Covar_HR, times = no_s)
   } else {
     Covar_HR = Covar_HR
   }
+  
+  
   if (length(BigT) > 1 & BMest != "MDRI.FRR.indep")
     stop("More than one BigT specified when only one MDRI")
   if (length(BigT) == 1) {
@@ -283,7 +287,7 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
       BS_RootEstMat[, (i * 4 - 3):(i * 4)] <- BS_SURVEY_ESTS(prevH = PrevH[i],
                                                              prevR = PrevR[i], mdri = MDRI[i], frr = FRR[i], bs_count = BS_Count,
                                                              bs_var_prevH = BS_Var_PrevH[i], bs_var_prevR = BS_Var_PrevR[i], bs_var_mdri = BS_Var_MDRI[i],
-                                                             bs_var_frr = BS_Var_FRR[i], covar_HR = Covar_HR[i])
+                                                             bs_var_frr = BS_Var_FRR[i], covar_HR = Covar_HR[i], cor_HR = cor_HR[i])
     }
     # returns bootstraps of prevH, prevR, mdri, frr as columns, one for each survey,
     # so if survey#=3, then first four columns are for prevH, prevR, mdri, frr as
@@ -615,7 +619,7 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
 
 inccounts <- function(N, N_H, N_testR, N_R, DE_H = 1, DE_R = 1, BS_Count = 10000,
                       Boot = FALSE, alpha = 0.05, BMest = "same.test", MDRI, RSE_MDRI, FRR, RSE_FRR,
-                      BigT = 730, Covar_HR = 0) {
+                      BigT = 730, Covar_HR = 0, cor_HR = NULL) {
   
   if (sum(BMest == c("same.test", "FRR.indep", "MDRI.FRR.indep")) == 0) {
     stop("BMest option must be same.test, FRR.indep, or MDRI.FRR.indep")
@@ -627,6 +631,5 @@ inccounts <- function(N, N_H, N_testR, N_R, DE_H = 1, DE_R = 1, BS_Count = 10000
   incprops(BS_Count = BS_Count, Boot = Boot, alpha = alpha, BMest = BMest, PrevH = counts.to.prev$PrevH,
            RSE_PrevH = counts.to.prev$RSE_PrevH, PrevR = counts.to.prev$PrevR, RSE_PrevR = counts.to.prev$RSE_PrevR,
            MDRI = MDRI, RSE_MDRI = RSE_MDRI, FRR = FRR, RSE_FRR = RSE_FRR, BigT = BigT,
-           Covar_HR = Covar_HR)
+           Covar_HR = Covar_HR, cor_HR =  cor_HR)
 }
-

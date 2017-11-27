@@ -46,7 +46,7 @@ shinyServer(function(input, output){
       need(input$FRR <= 100, 'Please provide a valid value for FRR'),
       need(input$BigT, 'Please provide a value for the cut-off time'),
       need(input$BigT > 120, 'Please provide a valid value for the cut-off time (>120)'),
-      need(!is.na(input$cov_PrevH_PrevR), "Please provide a valid covariance for PrevH and PrevR (default: 0)"),
+      need(!is.na(input$cor_PrevH_PrevR), "Please provide a valid correlation for PrevH and PrevR (default: 0)"),
       need(input$n_bootstraps >= 10000, "Bootstrapping iterations must be in the range [10,000,500,000]"),
       need(input$n_bootstraps <= 500000, "Bootstrapping iterations must be in the range [10,000,500,000]")
     )
@@ -57,7 +57,7 @@ shinyServer(function(input, output){
              BigT = input$BigT,
              Boot = TRUE,
              BS_Count = input$n_bootstraps,
-             Covar_HR = input$cov_PrevH_PrevR)
+             cor_HR = input$cor_PrevH_PrevR)
   }) 
   
     output$incidence_table <- renderTable(digits = 6, {
