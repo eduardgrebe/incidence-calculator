@@ -20,7 +20,14 @@ fluidPage(
                 tabPanel("Single survey",
                          br(),
                          fluidRow(
-                           column(2,
+                           column(3,
+                                  wellPanel(
+                                    radioButtons("data_type", label = h3("Data type:"),
+                                                 c("Sample proportions" = 1,
+                                                   "Sample counts" = 2
+                                                 ),
+                                                 selected = 1)
+                                  ),
                                   wellPanel(
                                     h3("Recency test"),
                                     numericInput("MDRI","MDRI (days):", value = 180, step = 1, min = 0, max = 730),
@@ -31,14 +38,8 @@ fluidPage(
                                   )
                                   
                            ),
-                           column(3,
-                                  wellPanel(
-                                    radioButtons("data_type", label = h3("Data dype:"),
-                                                 c("Sample proportions" = 1,
-                                                   "Sample counts" = 2
-                                                 ),
-                                                 selected = 1)
-                                  ),
+                           column(4,
+                                  
                                   conditionalPanel(
                                     condition = "input.data_type == 1",
                                     wellPanel(
@@ -50,7 +51,7 @@ fluidPage(
                                       )),
                                       numericInput("PrevH",
                                                    label = h5("Prevalence (%)"),
-                                                   value = 20, step = 0.1, min=0, max = 100),
+                                                   value = 20.000, step = 0.1, min=0, max = 100),
                                       numericInput("RSE_PrevH",
                                                    label = h5("RSE on prevalence (%)"),
                                                    value = 2.828, 
@@ -59,11 +60,11 @@ fluidPage(
                                                    label = h5("Proportion recent | + (%)"), value = 5, step = 0.1, min=0, max = 100),
                                       numericInput("RSE_PrevR",
                                                    label = h5("RSE on prop. recent (%)"),
-                                                   value = 13.78,
+                                                   value = 13.780,
                                                    step = 0.1, min=0, max = 100),
                                       numericInput("cor_PrevH_PrevR",
                                                    label = h5("Cor prev. & prop. recent"),
-                                                   value = 0,
+                                                   value = 0.000,
                                                    min = -1, max = 1, step = 0.01)
                                     )
                                   ),
@@ -115,11 +116,11 @@ fluidPage(
                                                  step = 1000, min = 10000, max = 500000)
                                   )
                            ),
-                           column(7,
+                           column(5,
                                   wellPanel(
                                     h2("Incidence estimates"),
                                     fluidRow(
-                                      h3("Incidence"),
+                                      
                                       tableOutput("incidence_table")
                                       # ,
                                       # br(),

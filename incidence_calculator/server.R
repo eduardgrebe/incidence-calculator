@@ -65,7 +65,7 @@ shinyServer(function(input, output){
                        cor_HR = input$cor_PrevH_PrevR)
       
       inc_df <- dplyr::data_frame(
-        `%HIV+` = input$PrevH * 100 / 100, #cluge to make trailing zeros appear
+        `%HIV+` = round(input$PrevH,3), #  * 100 / 100 cluge to make trailing zeros appear
         `%HIV+ SE` = input$PrevH/100 * input$RSE_PrevH/100 * 100,
         `%Inc` = temp$Incidence$Incidence * 100,
         `%Inc SE` = temp$Incidence$RSE.I * temp$Incidence$Incidence * 100,
