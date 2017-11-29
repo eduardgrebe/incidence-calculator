@@ -565,8 +565,11 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
                                                        CI.LB = out_CI_I_lo, CI.UB = out_CI_I_up, RSE.I = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS), #SE.I = out_RSE_I*out_I_Est, 
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     } else {
-      output <- list(Incidence.Statistics = data.frame(Incidence = out_I_Est,
-                                                       CI.LB = out_CI_I_lo, CI.UB = out_CI_I_up, RSE.I = out_RSE_I, Cov.PrevH.I = BS_I_PrevH_cov_vec[[1]], ##SE.I = out_RSE_I*out_I_Est, 
+      output <- list(Incidence.Statistics = data.frame(Incidence = as.numeric(as.character(out_I_Est)),
+                                                       CI.LB = as.numeric(as.character(out_CI_I_lo)), 
+                                                       CI.UB = as.numeric(as.character(out_CI_I_up)), 
+                                                       RSE.I = as.numeric(as.character(out_RSE_I)), 
+                                                       Cov.PrevH.I = BS_I_PrevH_cov_vec[[1]], ##SE.I = out_RSE_I*out_I_Est, 
                                                        Cor.PrevH.I = BS_I_PrevH_cor_vec[[1]]),
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     }
