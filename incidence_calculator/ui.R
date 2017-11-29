@@ -14,7 +14,7 @@ library(shiny)
 # Define UI
 
 fluidPage(
-  titlePanel("Prevalence and incidence calculator (UNAIDS RG 2017)"),
+  titlePanel("Prevalence and incidence calculator (UNAIDS RG 2017) [alpha version!]"),
   fluidRow(
     tabsetPanel(id = "tabs", type = "tabs",
               tabPanel("Single survey",
