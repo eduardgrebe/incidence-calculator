@@ -202,19 +202,26 @@ fluidPage(
                          #value = "about",
                          #value='tab4_val', id = 'tab4',
                          wellPanel( p(""),
-                                    p(HTML("Calculates HIV incidence from prevalence survey data that include biomarkers of recent infection.")),
-                                    p("Authors:"),
+                                    p(em("Calculates HIV incidence from prevalence survey data that include biomarkers of recent infection.")),
+                                    p(strong("Authors:")),
                                     tags$ul(
-                                      tags$li("Eduard Grebe (SACEMA, Stellenbosch University)"),
-                                      tags$li("Alex Welte (SACEMA, Stellenbosch University)")
+                                      tags$li(a("Eduard Grebe (SACEMA, Stellenbosch University)", href = "mailto:eduardgrebe@sun.ac.za")),
+                                      tags$li(a("Alex Welte (SACEMA, Stellenbosch University)", href = "mailto:alexwelte@sun.ac.za"))
                                     ),
-                                    p("Contributors:"),
+                                    p(strong("Project lead:")),
                                     tags$ul(
-                                      tags$li("Jeffrey Eaton (Imperial College London)")
+                                      tags$li(a("Jeffrey Eaton (Imperial College London)", href = "mailto:jeffrey.eaton@imperial.ac.uk"))
                                     ),
-                                    p(em("Built using", a(strong("inctools"), href = "https://github.com/SACEMA/inctools", target = "_blank"))),
                                     br(),
-                                    
+                                    p("Re-uses some code under the GPL from:"),
+                                    tags$ul(
+                                      tags$li("Lamin Juwara (McMaster University)"),
+                                      tags$li("Stefano Ongarello (FIND)")
+                                    ),
+                                    br(),
+                                    p(em(strong("Built using", a(strong("inctools"), href = "https://github.com/SACEMA/inctools", target = "_blank")))),
+                                    br(),
+                                    p(strong("Licence: GPL-3")),
                                     p("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.")
                          ),
                          br(),
