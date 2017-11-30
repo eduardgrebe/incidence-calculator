@@ -101,7 +101,7 @@ shinyServer(function(input, output){
           need(input$N_testR>=input$N_R,"The number of recent HIV cases should be less than or equal to HIV-positive subjects tested for recency"),
           need(input$DE_H >= 1, "Design effect on HIV prevalence must be >= 1"),
           need(input$DE_R >= 1, "Design effect on Prop. recent | + must be >= 1"),
-          need(!is.na(input$cor_PrevH_PrevR), "Please provide a valid correlation for PrevH and PrevR (default: 0)")
+          #need(!is.na(input$cor_PrevH_PrevR), "Please provide a valid correlation for PrevH and PrevR (default: 0)")
         )
         
         temp <- inccounts(N = input$N, 
@@ -118,7 +118,7 @@ shinyServer(function(input, output){
                           Boot = TRUE,
                           BS_Count = input$n_bootstraps,
                           Covar_HR = 0, 
-                          cor_HR = input$cor_PrevH_PrevR)
+                          cor_HR = 0)
         
         temp_prev <- prevcounts(N = input$N, 
                                 N_H = input$N_H, 

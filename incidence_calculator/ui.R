@@ -12,16 +12,16 @@
 library(shiny)
 
 fluidPage(
-  titlePanel("Prevalence and incidence calculator (UNAIDS RG) [beta 2, 30/11/2017]"),
+  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [beta 3, 30/11/2017]"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
-                tabPanel("Estimate incidence",
+                tabPanel("Estimate Incidence",
                          br(),
                          fluidRow(
                            column(12,
                                   wellPanel(
                                     #h3("Prevalence estimate format"),
-                                    radioButtons("single_multiple", label = h4("Enter HIV prevalence and prevalence of recency:"),
+                                    radioButtons("single_multiple", label = h4("Enter HIV Prevalence and Proportion Recent:"),
                                                  c("via a form (one survey at a time)" = 1,
                                                    "via a file (one or more surveys)" = 2
                                                  ),
@@ -36,19 +36,19 @@ fluidPage(
                                     condition = "input.single_multiple == 1",
                                            column(3,
                                                   wellPanel(
-                                                    radioButtons("data_type", label = h3("Data type:"),
-                                                                 c("Sample proportions" = 1,
-                                                                   "Sample counts" = 2
+                                                    radioButtons("data_type", label = h3("Data Type:"),
+                                                                 c("Estimated Prevalences" = 1,
+                                                                   "Sample Counts" = 2
                                                                  ),
                                                                  selected = 1)
                                                   ),
                                                   wellPanel(
-                                                    h3("Recency test"),
+                                                    h3("Recency Test"),
                                                     numericInput("MDRI","MDRI (days):", value = 180, step = 1, min = 0, max = 730),
                                                     numericInput("SE_MDRI","SE on MDRI:", value = 18, step = 0.5, min = 0, max = 100),
                                                     numericInput("FRR","False-Recent Rate (%):", value = 0.5, step = 0.1, min = 0, max = 100),
-                                                    numericInput("SE_FRR","SE on FRR:", value = 0.125, step = 0.005, min = 0, max = 100),
-                                                    sliderInput("BigT", "Time cutoff T (days):", min = 180, max = 1095, value = 730, step = 5)
+                                                    numericInput("SE_FRR","SE on FRR (percentage points):", value = 0.125, step = 0.005, min = 0, max = 100),
+                                                    sliderInput("BigT", "Time Cutoff T (days):", min = 180, max = 1095, value = 730, step = 5)
                                                   )
                                                   
                                            ),
@@ -57,27 +57,27 @@ fluidPage(
                                                   conditionalPanel(
                                                     condition = "input.data_type == 1",
                                                     wellPanel(
-                                                      h3("Survey data"),
-                                                      em("Pre-processed data:"),
+                                                      h3("Survey Data"),
+                                                      em("Pre-processed Data:"),
                                                       em(tags$ul(
                                                         tags$li("Use standard complex survey methods"),
                                                         tags$li("Estimate correlation between prevalence and prop. recent")
                                                       )),
                                                       numericInput("PrevH",
-                                                                   label = h5("Prevalence (%)"),
+                                                                   label = h5("Prevalence (%):"),
                                                                    value = 20.000, step = 0.1, min=0, max = 100),
                                                       numericInput("SE_PrevH",
-                                                                   label = h5("SE on prevalence (%)"),
+                                                                   label = h5("SE on Prevalence (percentage points):"),
                                                                    value = 0.693, 
                                                                    step = 0.1, min=0, max = 100),
                                                       numericInput("PrevR",
-                                                                   label = h5("Proportion recent | + (%)"), value = 5, step = 0.1, min=0, max = 100),
+                                                                   label = h5("Proportion of HIV+ that test Recent (%):"), value = 5, step = 0.1, min=0, max = 100),
                                                       numericInput("SE_PrevR",
-                                                                   label = h5("SE on prop. recent (%)"),
+                                                                   label = h5("SE on Prop. Recent (percentage points):"),
                                                                    value = 0.844,
                                                                    step = 0.1, min=0, max = 100),
                                                       numericInput("cor_PrevH_PrevR",
-                                                                   label = h5("Corr prev. & prop. recent"),
+                                                                   label = h5("Corr (Prev., Prop. Recent):"),
                                                                    value = 0.200,
                                                                    min = -1, max = 1, step = 0.01)
                                                     )
@@ -85,58 +85,59 @@ fluidPage(
                                                   conditionalPanel(
                                                     condition = "input.data_type == 2",
                                                     wellPanel(
-                                                      h3("Survey data"),
-                                                      em("Assumptions:"),
-                                                      em(tags$ul(
-                                                        tags$li("Non-SRS, DEs calculated"),
-                                                        tags$li("Corr prevalence and prop.recent estimated")
-                                                      )),
+                                                      h3("Survey Data"),
+                                                      # em("Assumptions:"),
+                                                      # em(tags$ul(
+                                                      #   tags$li("Non-SRS, DEs calculated"),
+                                                      #   tags$li("Corr prevalence and prop.recent estimated")
+                                                      # )),
                                                       numericInput("N", 
-                                                                   label = "Sample size",
+                                                                   label = "Sample Size:",
                                                                    value = 5000,
                                                                    min = 1,
                                                                    step = 1),
                                                       numericInput("N_H", 
-                                                                   label = "N HIV-positive",
+                                                                   label = "N HIV Positive:",
                                                                    value = 1000, 
                                                                    min = 1,
                                                                    step = 1),
                                                       numericInput("N_testR", 
-                                                                   label = "HIV-positives tested for recency",
+                                                                   label = "HIV Positives Tested for Recency:",
                                                                    value = 1000, 
                                                                    min = 1,
                                                                    step = 1),
                                                       numericInput("N_R", 
-                                                                   label = "N recent",
+                                                                   label = "N Recent:",
                                                                    value = 50, 
                                                                    min = 1,
                                                                    step = 1 ),
                                                       numericInput("DE_H", 
-                                                                   label = "Design effect HIV prevalence",
+                                                                   label = "Design Effect, HIV Prevalence:",
                                                                    value = 1.5,
                                                                    min = 1,
                                                                    step = 0.1),
                                                       numericInput("DE_R",
-                                                                   label = "Design effect prop. recent | +",
+                                                                   label = "Design Effect, Prop. HIV+ who test Recent:",
                                                                    value = 1.5,
                                                                    min = 1,
-                                                                   step = 0.1),
-                                                      numericInput("cor_PrevH_PrevR",
-                                                                   label = h5("Corr prev. & prop. recent"),
-                                                                   value = 0.200,
-                                                                   min = -1, max = 1, step = 0.01)
+                                                                   step = 0.1)
+                                                      # ,
+                                                      # numericInput("cor_PrevH_PrevR",
+                                                      #              label = h5("Corr prev. & prop. recent"),
+                                                      #              value = 0.200,
+                                                      #              min = -1, max = 1, step = 0.01)
                                                     )
                                                   ),
                                                   wellPanel(
                                                     numericInput("n_bootstraps",
-                                                                 label = h5("Bootstrapping iterations"),
+                                                                 label = h5("Bootstrapping Iterations:"),
                                                                  value = 100000,
                                                                  step = 1000, min = 10000, max = 500000)
                                                   )
                                            ),
                                     column(5,
                                            wellPanel(
-                                             h2("Incidence estimates"),
+                                             h2("Incidence Estimates"),
                                              fluidRow(
                                                conditionalPanel(
                                                  condition = "input.single_multiple == 1",
@@ -153,7 +154,7 @@ fluidPage(
                                     condition = "input.single_multiple == 2",
                                     column(12,
                                            wellPanel(
-                                             h2("Upload survey results"),
+                                             h2("Upload Survey Results"),
                                              fluidRow(
                                                br(),
                                                fileInput("input_file", "Choose CSV File",
@@ -164,14 +165,14 @@ fluidPage(
                                              )
                                              ),
                                              wellPanel(
-                                             h2("Input data"),
+                                             h2("Uploaded Data"),
                                              fluidRow(
                                                  tableOutput("data_table")
                                              )
                                            ),
                                            
                                              wellPanel(
-                                               h2("Incidence estimates"),
+                                               h2("Incidence Estimates"),
                                                      tableOutput("incidence_table_multiple"),
                                                downloadButton("incidence_table_download", label = "Download estimates")
                                             
@@ -190,7 +191,7 @@ fluidPage(
                          )
                 ),
                 
-                tabPanel("Technical documentation",
+                tabPanel("Technical Documentation",
                          #value = "techdoc",
                          wellPanel(
                            includeHTML("www/TechnicalDocumentation.html")  
