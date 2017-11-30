@@ -155,8 +155,9 @@ fluidPage(
                                            wellPanel(
                                              h2("Upload survey results"),
                                              fluidRow(
+                                               br(),br(),
                                                em("Note: the uploaded file must have *exactly* the shape described in the documentation."),
-                                               br()
+                                               br(),br()
                                              ),
                                              fluidRow(
                                                fileInput("input_file", "Choose CSV File",
@@ -185,18 +186,18 @@ fluidPage(
                          )
                 
                 ),
-                         
+                
+                tabPanel("Help", 
+                         #value = "example",
+                         wellPanel(
+                           includeHTML("www/Help.html")
+                         )
+                ),
+                
                 tabPanel("Technical documentation",
                          #value = "techdoc",
                          wellPanel(
                            includeHTML("www/TechnicalDocumentation.html")  
-                         )
-                ),
-                
-                tabPanel("Worked example", 
-                         #value = "example",
-                         wellPanel(
-                           includeHTML("www/WorkedExample.html")
                          )
                 ),
                 
@@ -211,11 +212,10 @@ fluidPage(
                                       tags$li("Alex Welte")
                                     ),
                                     p("Contributors:"),
-                                    tags$ul(   
-                                      tags$li("Lamin Juwara"),
-                                      tags$li("Stefano Ongarello")
+                                    tags$ul(
+                                      tags$li("Jeff Eaton")
                                     ),
-                                    p(em("Built using", a(strong("inctools"), href = "https://cran.r-project.org/web/packages/inctools/index.html", target = "_blank"))),
+                                    p(em("Built using", a(strong("inctools"), href = "https://github.com/SACEMA/inctools", target = "_blank"))),
                                     br(),
                                     p("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.")
                          )
