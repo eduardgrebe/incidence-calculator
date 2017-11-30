@@ -332,12 +332,11 @@ $(document).ready(function () {
 <li>Primary sampling unit (cluster ID)</li>
 <li>Weight (based on estimates of demographic/geographic structure)</li>
 <li>Stratum (an ID indicating strata such as age, rage, (rural/urban) settlement type,.. )</li>
-<li>Sex/Gender (no need to settle heated debates here - M/F will do)</li>
+<li>Gender/Sex (no need to settle heated debates here - M/F will do)</li>
 <li>HIV status (0/1 for -/+ respectively)</li>
 <li>Recency Status (0/1 for Non-recent/Recent respectively)</li>
 </ul>
-<p>The example data set provided is here <span class="citation" data-cites="URL">@URL</span>@. It has the specific column names corresponding to these, in CSV form: * SID * PSU * W * S * G * H * R (Null values are recorded as consecutive commas ??)</p>
-<p>This will usually be processed by somewhat ad-hoc means, generalizable for certain standard sampling frame types.</p>
+<p>The example data set provided is here <span class="citation" data-cites="URL">@URL</span>@. It has the specific column names corresponding to these, in CSV form: * SID * PSU * W * S * G * H * R (Null values are recorded as consecutive commas ??). This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types.</p>
 <p>To facilitate a (hopefully preliminary) ‘naive’ analysis, <span class="citation" data-cites="the">@the</span> app@ has a ‘Counts based estimate’ box (on what tab?), which takes (or looks up from an uploaded data set) survey counts, and hence produces prevalence estimates (for both HIV and recent infection, including variances) under the simplifying assumption of individual level random selection of subjects from a single population group.</p>
 <p>In the example data set, this leads to:</p>
 <ul>

@@ -9,16 +9,7 @@
 # General Public License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-#server.R
-
 library(shiny)
-library(ggplot2)
-library(scales)
-library(plyr)
-library(dplyr)
-library(grid)
-library(readxl)
-library(readr)
 source('incidence.R')
 
 shinyServer(function(input, output){

@@ -9,11 +9,10 @@
 # General Public License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-
 library(shiny)
-# Define UI
+
 fluidPage(
-  titlePanel("Prevalence and incidence calculator (UNAIDS RG) [beta, 30/11/2017]"),
+  titlePanel("Prevalence and incidence calculator (UNAIDS RG) [beta 2, 30/11/2017]"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
                 tabPanel("Estimate incidence",
