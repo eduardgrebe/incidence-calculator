@@ -29,7 +29,7 @@ A cross sectional survey leads to a core dataset with typical (germaine to the p
 * Primary sampling unit (cluster ID)
 * Weight (based on estimates of demographic/geographic structure)
 * Stratum (an ID indicating strata such as age, rage, (rural/urban) settlement type,.. )
-* Sex/Gender (no need to settle heated debates here - M/F will do)
+* Gender/Sex (no need to settle heated debates here - M/F will do)
 * HIV status (0/1 for -/+ respectively)
 * Recency Status (0/1 for Non-recent/Recent respectively)
 
@@ -41,9 +41,7 @@ The example data set provided is here @URL@. It has the specific column names co
 * G
 * H
 * R
-(Null values are recorded as consecutive commas ??)
-
-This will usually be processed by somewhat ad-hoc means, generalizable for certain standard sampling frame types.
+(Null values are recorded as consecutive commas ??). This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types.
 
 
 To facilitate a (hopefully preliminary) 'naive' analysis, @the app@ has a ‘Counts based estimate’ box (on what tab?), which takes (or looks up from an uploaded data set) survey counts, and hence produces prevalence estimates (for both HIV and recent infection, including variances) under the simplifying assumption of individual level random selection of subjects from a single population group.
@@ -90,4 +88,4 @@ Using primarily the *inctools* Function `incprops`, @the app@ will report:
 
 ## Key App features
 
-### 
+###
