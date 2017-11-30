@@ -41,7 +41,7 @@ prevcounts <- function(N, N_H, N_testR, N_R, DE_H = 1, DE_R = 1) {
   RSE_PrevH <- sqrt(((PrevH * (1 - PrevH))/N) * DE_H)/PrevH
   RSE_PrevR <- sqrt(((PrevR * (1 - PrevR))/N_testR) * DE_R)/PrevR
   
-  output <- data.frame(PrevH = PrevH, PrevR = PrevR, RSE_PrevH = RSE_PrevH, RSE_PrevR = RSE_PrevR)
+  output <- dplyr::data_frame(PrevH = PrevH, PrevR = PrevR, RSE_PrevH = RSE_PrevH, RSE_PrevR = RSE_PrevR)
   return(output)
 }
 
@@ -561,11 +561,11 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
     ARI.list <- round(dplyr::data_frame(ARI = ARI, CI.LB = ARI.CI.low, CI.UB = ARI.CI.up),
                       digits = 6)
     if (Boot == FALSE) {
-      output <- list(Incidence.Statistics = data.frame(Incidence = out_I_Est,
+      output <- list(Incidence.Statistics = dplyr::data_frame(Incidence = out_I_Est,
                                                        CI.LB = out_CI_I_lo, CI.UB = out_CI_I_up, RSE.I = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS), #SE.I = out_RSE_I*out_I_Est, 
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     } else {
-      output <- list(Incidence.Statistics = data.frame(Incidence = as.numeric(as.character(out_I_Est)),
+      output <- list(Incidence.Statistics = dplyr::data_frame(Incidence = as.numeric(as.character(out_I_Est)),
                                                        CI.LB = as.numeric(as.character(out_CI_I_lo)), 
                                                        CI.UB = as.numeric(as.character(out_CI_I_up)), 
                                                        RSE.I = as.numeric(as.character(out_RSE_I)), 
@@ -574,9 +574,9 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     }
   } else if (Boot == FALSE) {
-    Incidence.Statistics = data.frame(survey = survey_no, Incidence = out_I_Est,
+    Incidence.Statistics = dplyr::data_frame(survey = survey_no, Incidence = out_I_Est,
                                       `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS)
-    Incidence.Difference.Statistics = data.frame(compare = delta_code, Diff = out_deltaI_Est,
+    Incidence.Difference.Statistics = dplyr::data_frame(compare = delta_code, Diff = out_deltaI_Est,
                                                  `CI Diff low` = out_CI_deltaI_Mat[, 1], `CI Diff up` = out_CI_deltaI_Mat[,
                                                                                                                           2], `RSE Diff` = out_RSE_deltaI, `RSE Diff Inf.SS` = out_RSE.deltaI.infSS,
                                                  `p-value` = out_p_value, `p-value.Inf.SS` = out_p_value.infSS)
@@ -591,10 +591,10 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
                    MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
   } else {
     #browser()
-    Incidence.Difference.Statistics = data.frame(compare = delta_code, Diff = out_deltaI_Est,
+    Incidence.Difference.Statistics = dplyr::data_frame(compare = delta_code, Diff = out_deltaI_Est,
                                                  `CI Diff low` = out_CI_deltaI_Mat[, 1], `CI Diff up` = out_CI_deltaI_Mat[,
                                                                                                                           2], `RSE Diff` = out_RSE_deltaI, `p-value` = out_p_value)
-    Incidence.Statistics = data.frame(survey = survey_no, Incidence = out_I_Est,
+    Incidence.Statistics = dplyr::data_frame(survey = survey_no, Incidence = out_I_Est,
                                       `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I)
     Incidence.Statistics = Incidence.Statistics[which(Incidence.Statistics[,
                                                                            1] != ""), ]
