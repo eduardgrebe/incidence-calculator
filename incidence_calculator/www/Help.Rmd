@@ -1,6 +1,5 @@
 ## Analysis of survey data
 
-
 Once a population level survey has been carried out, the fully specified data set will essentially consist of subject level records indicating demographic factors, cluster/stratum membership, and various clinical indicators such as final HIV status and recency status.
 
 A cross sectional survey leads to a core dataset with typical (germaine to the present application) columns
