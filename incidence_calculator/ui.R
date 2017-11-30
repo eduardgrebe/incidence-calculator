@@ -13,7 +13,7 @@
 library(shiny)
 # Define UI
 fluidPage(
-  titlePanel("Prevalence and incidence calculator (UNAIDS RG 2017) [alpha]"),
+  titlePanel("Prevalence and incidence calculator (UNAIDS RG) [beta, 30/11/2017]"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
                 tabPanel("Estimate incidence",
@@ -156,11 +156,7 @@ fluidPage(
                                            wellPanel(
                                              h2("Upload survey results"),
                                              fluidRow(
-                                               br(),br(),
-                                               em("Note: the uploaded file must have *exactly* the shape described in the documentation."),
-                                               br(),br()
-                                             ),
-                                             fluidRow(
+                                               br(),
                                                fileInput("input_file", "Choose CSV File",
                                                                         multiple = FALSE,
                                                                         accept = c("text/csv",
@@ -206,20 +202,23 @@ fluidPage(
                          #value = "about",
                          #value='tab4_val', id = 'tab4',
                          wellPanel( p(""),
-                                    p(HTML("Calculates incidence and annual risk of infection from survey data with biomarkers for recent infection.")),
+                                    p(HTML("Calculates HIV incidence from prevalence survey data that include biomarkers of recent infection.")),
                                     p("Authors:"),
                                     tags$ul(
-                                      tags$li("Eduard Grebe"),
-                                      tags$li("Alex Welte")
+                                      tags$li("Eduard Grebe (SACEMA, Stellenbosch University)"),
+                                      tags$li("Alex Welte (SACEMA, Stellenbosch University)")
                                     ),
                                     p("Contributors:"),
                                     tags$ul(
-                                      tags$li("Jeff Eaton")
+                                      tags$li("Jeffrey Eaton (Imperial College London)")
                                     ),
                                     p(em("Built using", a(strong("inctools"), href = "https://github.com/SACEMA/inctools", target = "_blank"))),
                                     br(),
+                                    
                                     p("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.")
-                         )
+                         ),
+                         br(),
+                         img(src='SACEMA_logo.jpg', align = "right")
                 )
 )
 )
