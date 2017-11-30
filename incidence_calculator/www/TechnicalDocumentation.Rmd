@@ -2,26 +2,24 @@
 
 ## Introduction
 
-(The App can be found at @@)
-
-The underlying logic in this prevalence/incidence calculator is core functionality of the R package *inctools*.
-
 This app is designed to support the estimation of
 * HIV prevalence,
 * HIV incidence, and
 * (crucially) Full variance/covariance of the above
-
 through analysis of cross-sectional surveillance data including biomarkers supporting classification of (HIV) cases as recently or non-recently acquired.
+
+The underlying logic in this prevalence/incidence calculator is core functionality of the R package *inctools*.
 
 While the correct use of the app and the underlying *inctools* package does not require any detailed technical knowledge about the theoretical underpinnings, an understanding of the core concepts will be useful. This methodological overview is intended to provide technical documentation for transparency/reproducibility, and also to help potential users orient themselves.
 
-Detailed use of the app is explored (here/link) with a worked example.
+The *Help* tab provides a walk through of the preloaded examples.
 
 Users working to provide national level estimates as part of an interaction with UNAIDS are invited to contact the maintainers for assistance and are indeed requested to provide any notification of possible errors, as well as general feedback about clarity and functionality.
 
-## Overview of Analytical framework (, Functionality and Use)
 
-The critical core of all the functionality of package *inctools*, and hence of @this app@ is the incidence estimator of *Kassanjee et al* (Epidemiology, 2012) and some hitherto unpublished generalisations to accomodate structured survey design, including incomplete coverage of recency ascertainment. In essence, this generalisation involves the replacement of simple survey counts, assumed in *Kassanjee et al* to be trinomially distributed, by estimated prevalences, of: 1) HIV, and 2) ‘recent infection’ amongst HIV positives (including a potential covariance, which does not arise in the trinomial distribution case).
+## Overview of Analytical Framework
+
+The critical core of all the functionality of package *inctools*, and hence of this app, is the incidence estimator of *Kassanjee et al* (Epidemiology, 2012) and some hitherto unpublished generalisations to accomodate structured survey design, including incomplete coverage of recency ascertainment. In essence, this generalisation involves the replacement of simple survey counts, assumed in *Kassanjee et al* to be trinomially distributed, by estimated prevalences of: 1) HIV, and 2) ‘recent infection’ amongst HIV positives (including a potential covariance, which does not arise in the trinomial distribution case).
 
 The theoretical basis for this approach to incidence estimation is developed in Kassanjee et al* (Epidemiology, 2012), with considerable detail and nuances spelled out. Key points of the conceptual framework can be captured in the following remarks (A Glossary further below provides some conceptual depth on terminology):
 * There is presumed to be some test, which categorises HIV positive individuals as being ‘recent’ or ‘non recent’ cases.
@@ -32,6 +30,9 @@ The theoretical basis for this approach to incidence estimation is developed in 
 * The framework of Kassanjee et al provides an estimate for a (time) weighted average value of incidence over a period preceding a cross sectional survey in which HIV and recent infection are ascertained. Time weighting is also intrinsic to cohort studies, as the effective cohort size varies over the stages of recruitment, maintenance, and completion of follow up. The time averaging implied, when one considers any study design, including cohorts, often turns out to have complex details that are difficult or impossible to determine. In the case of the Kassanjee framework, the sensible heuristic is that the expectation value of the estimator should be understood to be the uniformly weighted incidence over a period of one MDRI preceding the survey
 * Users of the present tool may decide, given inter-survey intervals and other considerations, whether they choose to assign the prevalence and incidence estimates to the same time point. The first order correction to this would be to assign the incidence estimates a time of one half MDRI before the prevalence estimate from the same survey. For most applications, this is probably not important to account explicitly.
 * the original paper in Epidemiology introduces 8 sources of ‘higher order corrections’ beyond the leading order which is captured in the nominal Kassanjee estimator. Most of these are very minor and not worth further analysis. The one point worthy of some attention is that the usual form of the estimator assumes that the underlying susceptible population is constant. In a cohort, the susceptible population is always decreasing, and it is doing so precisely due to infections accruing, and perhaps loss to follow up. In an open population which is surveyed in a major household survey, it is not obvious whether the susceptible population is in fact increasing or decreasing, as there may be non-trivial migration or ‘aging in’ and ‘aging out’ contributions, in addition to the incidence itself. Some published forms of an estimator to handle recent infection data appear to have adopted a view aligned closely to the cohort situation. These details are all of the flavour of how to optimally handle the estimation of exposure time in a cohort in which follow up is infrequent, and assumptions must be made about the distribution of infection events. This is very much a fine point, however, as the main source of statistical uncertainty arises from the random *number of* infection events. The details of timing, and the consequences for exposure time, are secondary.
+
+
+
 
 ## Glossary
 
@@ -91,7 +92,3 @@ It should be noted that:
 *	There is no clear consensus on approach, and there are no mature tools, for estimating the design effect parameters for population based HIV surveys.
 *	The two design effects are logically independent parameters, which capture the effects of two logically independent processes (ascertaining HIV, and ascertain recent infection amongst HIV positive subjects).
 *	It is not appropriate to use design effects to scale the variances of the test property (MDRI and FRR) estimates, as these are not estimated in the incidence survey, but rather arise in the recency test development process.
-
-## Citation
-
-@The App@, and this supporting documentation, extensively use/recycle material from the R package *inctools*, in line with, and hence further under the aegis of a creative commons licence. This in turn implies the use of the methodology derived in: Kassanjee R, McWalter TA, Bärnighausen T, Welte A. A new general biomarker-based incidence estimator. Epidemiology. 2012; 23(5): 721-728. Some features implemented in *inctools* are currently not published outside the package contents, including technical details documented in the package vignettes, partially recycled here.

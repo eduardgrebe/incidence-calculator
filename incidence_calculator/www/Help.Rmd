@@ -1,25 +1,5 @@
 ## Analysis of survey data
 
-**Integreate somewhere:**
-
-When data from multiple surveys are analysed, a CSV file must be uploaded with exactly these columns:
-
-* Year
-* Prevalence_percent
-* SE_Prevalence
-* PropRecent_percent
-* SE_PropRecent
-* Corr_Prev_PropRecent
-* MDRI_days
-* SE_MDRI
-* FRR_percent
-* SE_FRR
-* BigT
-
-An example file can be [downloaded here](example_survey_input.csv).
-
-**End Eduard added section**
-
 
 Once a population level survey has been carried out, the fully specified data set will essentially consist of subject level records indicating demographic factors, cluster/stratum membership, and various clinical indicators such as final HIV status and recency status.
 
@@ -33,59 +13,83 @@ A cross sectional survey leads to a core dataset with typical (germaine to the p
 * HIV status (0/1 for -/+ respectively)
 * Recency Status (0/1 for Non-recent/Recent respectively)
 
-The example data set provided is here @URL@. It has the specific column names corresponding to these, in CSV form:
-* SID
-* PSU
-* W
-* S
-* G
-* H
-* R
-(Null values are recorded as consecutive commas ??). This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types.
-
-
-To facilitate a (hopefully preliminary) 'naive' analysis, @the app@ has a ‘Counts based estimate’ box (on what tab?), which takes (or looks up from an uploaded data set) survey counts, and hence produces prevalence estimates (for both HIV and recent infection, including variances) under the simplifying assumption of individual level random selection of subjects from a single population group.
-
-In the example data set, this leads to:
-
-* N subjects tested for HIV
-* N positive results, for an unweighted HIV prevalence of 20% estimated with a relative standard error of 2.8%
-* N recent results, among N_RA recency ascertainments, for a prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%
-
-We assume a recency test with
-* an MDRI of 200 days estimated with a relative standard error of 5%
-* an FRR of 5% estimated with a relative standard error of 20%
-Which is provided in the fields of the ‘recency test’ box
-
-This @triggered by refresh/button@ leads to an incidence estimation summary:
-
-@insert here@
-
-In order to accommodate arbitrarily sophisticated analysis of complex survey data sets, the conception of @the app@ is that a substantial layer of intermediate processing is expected, the result of which is to reduce the full survey data set to:
+This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types, and there are standard R packages (like *survey*) which can do this. For the present application, the data should be reduced, by whatever means available to the user, to
 
 *	an estimate of HIV prevalence
 *	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
 *	A variance/covariance matrix for these two prevalence estimates
 
-While @the app@ has no firm requirements about how these estimates are to be obtained, they need to be provided in the specified form, either by hand into the interface, or by uploading a file - by which it is possible to provide estimates from multiple surveys in one transaction of the calculator.
+While the calculator has no particular requirements or expectations about how these estimates are to be obtained, they need to be provided in the specified format, either by hand into the interface (one survey per transaction of the calculator), or by uploading a file (which makes it possible to provide estimates from multiple surveys in one transaction of the calculator). This choice is made in the top horizontal box of the *Estimate Incidence* tab. Depending on the choice, the page adapts to handle the estimates accordingly. Either way, by using primarily the *inctools* function `incprops`, the calculator will report:
 
-From the same underlying data set that generated the counts just used above, we obtained
-*	an estimate of HIV prevalence
-*	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
-*	A variance/covariance matrix for these two prevalence estimates
-
-which are entered into , ...
-
-Using primarily the *inctools* Function `incprops`, @the app@ will report:
-
-* the (user provided) HIV Prevalence, CI and (relative) standard error
-* an incidence point estimate, confidence interval, and (relative) standard error
+* the (user provided) HIV Prevalence (point estimate and standard error)
+* an incidence point estimate and standard error
 * the equivalent annualised risk of infection (which is usually numerically very similar)
 * the correlation/covariance of HIV Prevalence and Incidence (including an approximate CI ?? REALLY ??)
-* implied confidence intervals on MDRI and FRR derived from input parameters (PEs and RSEs)
+* implied confidence intervals on MDRI and FRR derived from input parameters provided as PEs and RSEs)
 
 
+### Entering Survey Results in the Form
 
-## Key App features
+Having chosen to enter survey estimates "via a form", there is a further choice, to be made in the *Data type* box, namely whether to supply *estimated prevalences* or *sample counts*.
 
-###
+
+#### Entering Raw Sample Counts
+
+By *counts* we here mean providing, in the *Survey Data* box, raw survey counts of
+
+* subjects tested for HIV
+* positive results
+* recency ascertainments (on a completely random subset of positives)
+* 'recent' results
+
+This option would hopefully provide merely a preliminary analysis.
+
+In the preloaded example, the values are:
+* 5000 subjects tested for HIV
+* 1000 positive results (an unweighted HIV prevalence of 20%, estimated with a standard error of 0.56%)
+* 900 recency ascertainments on a completely random 900 of the 1000 positives, leading to 45 'recent' (and hence 855 'non recent') results, for a prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%
+
+It is worth changing the recency results into 1000 ascertainments (i.e. 100% coverage) and the number of 'recent' results to 50, and noting the slight improvement in precision this produces in the incidenc estimate
+
+
+#### Entering Prevalences Estimated with Sampling Complexities Accounted
+
+From the same underlying data set that generated the counts just used above, one should ideally take account of sampling complexities and directly obtain (for example by using the R package *survey*)
+*	an estimate of HIV prevalence
+*	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
+*	A variance/covariance matrix for these two prevalence estimates
+which can be entered into the *Survey Data* box when choosing the *Data Type* as *estimated prevalences*
+
+This is preloaded with:
+*	an estimate of HIV prevalence
+*	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
+*	A variance/covariance matrix for these two prevalence estimates
+
+
+### Entering Survey Results Via a File
+
+If one chooses to enter survey estimates "via a file", data from multiple surveys can be analysed in a single calculator transaction, by uploading a CSV file with exactly these columns:
+
+* Year
+* Prevalence_percent
+* SE_Prevalence
+* PropRecent_percent
+* SE_PropRecent
+* Corr_Prev_PropRecent
+* MDRI_days
+* SE_MDRI
+* FRR_percent
+* SE_FRR
+* BigT
+
+An example file can be [downloaded here](example_survey_input.csv), saved to the users storage, and then uploaded into the calculator.
+
+
+### Providing Recency Test Properties
+
+The Recency Test performance defining parameters are supplied in the fields of the ‘Recency Test’ box, which is found on both the form based and file based versions of the *Calculate Incidence* tab. These are preloaded to reflect a recency test with
+* an MDRI of 200 days, estimated with a standard error of 10 days
+* an FRR of 0.5%, estimated with a standard error of 0.1 percentage points
+* a recency time cut off (T) of 730 (i.e 2 Years) - set on a slider
+
+It is interesting to explore how rapidly precision deteriorates as one increases the FRR and/or it's uncertainty. Leaving survey data fixed, and at suitably small FRR, the point estimate and precision of incidence both scale roughly inversely with MDRI.
