@@ -1,0 +1,72 @@
+## Analysis of survey data
+
+Once a population level survey has been carried out, the fully specified data set will essentially consist of subject level records indicating demographic factors, cluster/stratum membership, and various clinical indicators such as HIV status and recency status.
+
+A cross sectional survey leads to a core dataset with typical (germaine to the present application) columns
+
+* Subject ID (a meaningless serial number)
+* Primary sampling unit (cluster ID)
+* Weight (based on estimates of demographic/geographic structure)
+* Stratum (an ID indicating strata such as age, race, (rural/urban) settlement type,.. )
+* HIV status (0/1 for -/+ respectively)
+* Recency Status (0/1 for Non-recent/Recent respectively)
+
+The example data set provided is here @URL@. It has the specific (required) column names in CSV form:
+* SID
+* PSU
+* W
+* S
+* H
+* R
+(Null values are recorded as consecutive commas ??)
+
+(note that sex/race/age may form part of the weighting algorithm, only the final weights are used in the analysis, so they need not – indeed cannot be - uploaded)
+
+(possibly redundant) This will usually be processed by somewhat ad-hoc means, generalizable for certain standard sampling frame types.
+
+
+To facilitate a (hopefully preliminary) 'naive' analysis, @the app@ has a ‘Counts based estimate’ box (on what tab?), which takes (or looks up from an uploaded data set) survey counts, and hence produces prevalence estimates (for both HIV and recent infection, including variances) under the simplifying assumption of individual level random selection of subjects from a single population group.
+
+In the example data set, this leads to:
+
+* N subjects tested for HIV
+* N positive results, for an unweighted HIV prevalence of 20% estimated with a relative standard error of 2.8%
+* N recent results, among N_RA recency ascertainments, for a prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%
+
+We assume a recency test with
+* an MDRI of 200 days estimated with a relative standard error of 5%
+* an FRR of 5% estimated with a relative standard error of 20%
+Which is provided in the fields of the ‘recency test’ box
+
+This @triggered by refresh/button@ leads to an incidence estimation summary:
+
+@insert here@
+
+In order to accommodate arbitrarily sophisticated analysis of complex survey data sets, the conception of @the app@ is that a substantial layer of intermediate processing is expected, the result of which is to reduce the full survey data set to:
+
+*	an estimate of HIV prevalence
+*	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
+*	A variance/covariance matrix for these two prevalence estimates
+
+While @the app@ has no firm requirements about how these estimates are to be obtained, they need to be provided in the specified form, or calculated internally.
+
+The R package *inctools* lists the R package *survey* in its dependencies, thereby providing access to at least one robust flexible tool to facilitate the estimation of the relevant sample proportions from structured survey data. @The app@ in turn supports a useful generic implementation of functionality of the *survey* package, which enables users to upload a full individual level data set obtained from a structured/complex sampling frame.
+
+(Do we first explain here, or earlier, how to upload a data set?)
+
+(possibly redundant:)The abovementioned *HIV* and *Recency* prevalences and their covariance can then be calculated internally rather than supplied by hand into the interface.
+
+The result of @a call to survey triggered by refresh/button@ this calculation is
+
+* An HIV prevalence of 20% estimated with a relative standard error of 2.8%
+* An estimated prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%
+
+As already noted, this can either be 1) generated within the app as just described, if a full data set conforming to the requirements is uploaded, or 2) provided as inputs to @the app@ in fields within the ‘prevalences box.
+
+Using primarily the *inctools* Function `incprops`, @the app@ will report:
+
+* the (possibly user provided) HIV Prevalence, CI and (relative)standard error
+* an incidence point estimate, confidence interval, and (relative) standard error
+* the correlation/covariance of HIV Prevalence and Incidence (including an approximate CI)
+* the equivalent annualised risk of infection (which is usually numerically very similar)
+* implied confidence intervals on MDRI and FRR derived from input parameters
