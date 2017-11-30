@@ -21,9 +21,10 @@ fluidPage(
                          fluidRow(
                            column(12,
                                   wellPanel(
-                                    radioButtons("single_multiple", label = h3("How many surveys do you wish to analyse?"),
-                                                 c("Single survey" = 1,
-                                                   "Multiple surveys" = 2
+                                    #h3("Prevalence estimate format"),
+                                    radioButtons("single_multiple", label = h4("Enter HIV prevalence and prevalence of recency:"),
+                                                 c("via a form (one survey at a time)" = 1,
+                                                   "via a file (one or more surveys)" = 2
                                                  ),
                                                  selected = 1)
                                   )  
