@@ -315,12 +315,12 @@ $(document).ready(function () {
 <li>Primary sampling unit (cluster ID)</li>
 <li>Weight (based on estimates of demographic/geographic structure)</li>
 <li>Stratum (an ID indicating strata such as age, rage, (rural/urban) settlement type,.. )</li>
+<li>Sex/Gender (no need to settle heated debates here - M/F will do)</li>
 <li>HIV status (0/1 for -/+ respectively)</li>
 <li>Recency Status (0/1 for Non-recent/Recent respectively)</li>
 </ul>
-<p>The example data set provided is here <span class="citation" data-cites="URL">@URL</span>@. It has the specific (required) column names in CSV form: * SID * PSU * W * S * H * R (Null values are recorded as consecutive commas ??)</p>
-<p>(note that sex/race/age may form part of the weighting algorithm, only the final weights are used in the analysis, so they need not – indeed cannot be - uploaded)</p>
-<p>(possibly redundant) This will usually be processed by somewhat ad-hoc means, generalizable for certain standard sampling frame types.</p>
+<p>The example data set provided is here <span class="citation" data-cites="URL">@URL</span>@. It has the specific column names corresponding to these, in CSV form: * SID * PSU * W * S * G * H * R (Null values are recorded as consecutive commas ??)</p>
+<p>This will usually be processed by somewhat ad-hoc means, generalizable for certain standard sampling frame types.</p>
 <p>To facilitate a (hopefully preliminary) ‘naive’ analysis, <span class="citation" data-cites="the">@the</span> app@ has a ‘Counts based estimate’ box (on what tab?), which takes (or looks up from an uploaded data set) survey counts, and hence produces prevalence estimates (for both HIV and recent infection, including variances) under the simplifying assumption of individual level random selection of subjects from a single population group.</p>
 <p>In the example data set, this leads to:</p>
 <ul>
@@ -337,24 +337,23 @@ $(document).ready(function () {
 <li>an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.</li>
 <li>A variance/covariance matrix for these two prevalence estimates</li>
 </ul>
-<p>While <span class="citation" data-cites="the">@the</span> app@ has no firm requirements about how these estimates are to be obtained, they need to be provided in the specified form, or calculated internally.</p>
-<p>The R package <em>inctools</em> lists the R package <em>survey</em> in its dependencies, thereby providing access to at least one robust flexible tool to facilitate the estimation of the relevant sample proportions from structured survey data. <span class="citation" data-cites="The">@The</span> app@ in turn supports a useful generic implementation of functionality of the <em>survey</em> package, which enables users to upload a full individual level data set obtained from a structured/complex sampling frame.</p>
-<p>(Do we first explain here, or earlier, how to upload a data set?)</p>
-<p>(possibly redundant:)The abovementioned <em>HIV</em> and <em>Recency</em> prevalences and their covariance can then be calculated internally rather than supplied by hand into the interface.</p>
-<p>The result of <span class="citation" data-cites="a">@a</span> call to survey triggered by refresh/button@ this calculation is</p>
-<ul>
-<li>An HIV prevalence of 20% estimated with a relative standard error of 2.8%</li>
-<li>An estimated prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%</li>
-</ul>
-<p>As already noted, this can either be 1) generated within the app as just described, if a full data set conforming to the requirements is uploaded, or 2) provided as inputs to <span class="citation" data-cites="the">@the</span> app@ in fields within the ‘prevalences box.</p>
+<p>While <span class="citation" data-cites="the">@the</span> app@ has no firm requirements about how these estimates are to be obtained, they need to be provided in the specified form, either by hand into the interface, or by uploading a file - by which it is possible to provide estimates from multiple surveys in one transaction of the calculator.</p>
+<p>From the same underlying data set that generated the counts just used above, we obtained * an estimate of HIV prevalence * an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive. * A variance/covariance matrix for these two prevalence estimates</p>
+<p>which are entered into , …</p>
 <p>Using primarily the <em>inctools</em> Function <code>incprops</code>, <span class="citation" data-cites="the">@the</span> app@ will report:</p>
 <ul>
-<li>the (possibly user provided) HIV Prevalence, CI and (relative)standard error</li>
+<li>the (user provided) HIV Prevalence, CI and (relative) standard error</li>
 <li>an incidence point estimate, confidence interval, and (relative) standard error</li>
-<li>the correlation/covariance of HIV Prevalence and Incidence (including an approximate CI)</li>
 <li>the equivalent annualised risk of infection (which is usually numerically very similar)</li>
-<li>implied confidence intervals on MDRI and FRR derived from input parameters</li>
+<li>the correlation/covariance of HIV Prevalence and Incidence (including an approximate CI ?? REALLY ??)</li>
+<li>implied confidence intervals on MDRI and FRR derived from input parameters (PEs and RSEs)</li>
 </ul>
+</section>
+<section id="key-app-features" class="level2">
+<h2>Key App features</h2>
+<section id="section" class="level3">
+<h3></h3>
+</section>
 </section>
 
 
