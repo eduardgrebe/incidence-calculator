@@ -1,5 +1,26 @@
 ## Analysis of survey data
 
+**Integreate somewhere:**
+
+When data from multiple surveys are analysed, a CSV file must be uploaded with exactly these columns:
+
+* Year
+* Prevalence_percent
+* SE_Prevalence
+* PropRecent_percent
+* SE_PropRecent
+* Corr_Prev_PropRecent
+* MDRI_days
+* SE_MDRI
+* FRR_percent
+* SE_FRR
+* BigT
+
+An example file can be [downloaded here](example_survey_input.csv).
+
+**End Eduard added section**
+
+
 Once a population level survey has been carried out, the fully specified data set will essentially consist of subject level records indicating demographic factors, cluster/stratum membership, and various clinical indicators such as final HIV status and recency status.
 
 A cross sectional survey leads to a core dataset with typical (germaine to the present application) columns
