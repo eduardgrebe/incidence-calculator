@@ -153,7 +153,8 @@ fluidPage(
                                   conditionalPanel(
                                     condition = "input.single_multiple == 2",
                                     column(12,
-                                           wellPanel(
+                                           column(8,
+                                                  wellPanel(
                                              h2("Upload Survey Results"),
                                              fluidRow(
                                                br(),
@@ -163,7 +164,16 @@ fluidPage(
                                                                                    "text/comma-separated-values,text/plain",
                                                                                    ".csv"))
                                              )
-                                             ),
+                                             )
+                                                  ),
+                                           column(4,
+                                                  wellPanel(
+                                                    numericInput("n_bootstraps",
+                                                                 label = h5("Bootstrapping Iterations:"),
+                                                                 value = 100000,
+                                                                 step = 1000, min = 10000, max = 500000)
+                                                  )
+                                                  ),
                                              wellPanel(
                                              h2("Uploaded Data"),
                                              fluidRow(
