@@ -13,7 +13,7 @@ library(shiny)
 source('incidence.R')
 
 shinyServer(function(input, output){
-
+  
   determine_tab <- reactive({
     active_tab <- input$tabs
     return(active_tab)
@@ -21,6 +21,13 @@ shinyServer(function(input, output){
   
   incidence_calc <- reactive({
     #browser()
+    
+    RSE_MDRI <- input$SE_MDRI / input$MDRI
+    MDRI <- input$MDRI
+    
+    FRR <- input$FRR / 100
+    RSE_FRR  <- ifelse(input$FRR == 0, 0, input$SE_FRR / input$FRR)
+    FRR<- ifelse(FRR==0,0.0000000001,FRR) # cheating
     
     if (input$single_multiple == 1) {
       validate(
@@ -43,7 +50,8 @@ shinyServer(function(input, output){
       MDRI <- input$MDRI
       
       FRR <- input$FRR / 100
-      RSE_FRR  <- input$SE_FRR / input$FRR
+      RSE_FRR  <- ifelse(input$FRR == 0, 0, input$SE_FRR / input$FRR)
+      FRR<- ifelse(FRR==0,0.0000000001,FRR) # cheating
       
       
       if (input$data_type == 1) {
@@ -136,7 +144,82 @@ shinyServer(function(input, output){
         )
         
         return(inc_df)
+        
+      } else if (input$data_type == 3) {
+        #browser()
+        
+        
+        prev <- (input$N_Re + input$N_nonR) / (input$N_Re + input$N_nonR + input$N_Neg)
+        prevR <- input$N_Re / (input$N_Re + input$N_nonR)
+        
+        
+        vcovmat <- matrix(nrow=3,ncol = 3)
+        vcovmat[1,1] <- input$Var_N_R
+        vcovmat[2,2] <- input$Var_N_nonR
+        vcovmat[3,3] <- input$Var_N_Neg
+        vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NR
+        vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_Neg
+        vcovmat[3,2] <- vcovmat[2,3] <- input$Cov_NR_Neg
+        
+        vars <- cbind(c(input$N_Neg, input$N_Neg, - (input$N_Re + input$N_nonR)) / (input$N_Re + input$N_nonR + input$N_Neg)^2,
+              c(input$N_nonR, -input$N_Re, 0) / (input$N_Re + input$N_nonR)^2)
+        
+        propvars <- t(vars) %*% vcovmat %*% vars
+        
+        SEs <- sqrt(diag(propvars))
+        
+        corr <- cov2cor(propvars)[1,2]
+        
+        temp <- incprops(PrevH = prev, 
+                         RSE_PrevH = SEs[1]/prev,
+                         PrevR = prevR, 
+                         RSE_PrevR = SEs[2]/prevR,
+                         MDRI = MDRI, 
+                         RSE_MDRI = RSE_MDRI,
+                         FRR = FRR, 
+                         RSE_FRR = RSE_FRR,
+                         BigT = input$BigT,
+                         Boot = TRUE,
+                         BS_Count = input$n_bootstraps,
+                         cor_HR = corr)
+        
+        inc_df <- dplyr::data_frame(
+          `Prev (%)` = round(prev * 100, 3),
+          `Prev SE` =  round(SEs[1] * 100, 3),
+          `Inc (%)*` = round(temp$Incidence$Incidence * 100, 3),
+          `Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
+          Corr = round(temp$Incidence$Cor.PrevH.I, 3)
+        )
+        
+        
+      } else if (input$data_type == 4) {
+        
+        
+      } else if (input$data_type == 5) {
+        
+        prev <- input$PrevH/100 
+        prev_se <- input$SE_PrevH/100
+        inc <- input$Inc/100
+        inc_se <- input$SE_Inc/100
+        
+        
+        
+        
+        inc_df <- dplyr::data_frame(
+          `Prev (%)` = round(input$PrevH,3),
+          `Prev SE` = input$SE_PrevH,
+          `Inc (%)*` = input$Inc,
+          `Inc SE` = input$SE_Inc,
+          Corr = inc / ((1-prev)*prev) * prev_se / inc_se
+        )
+        
+        return(inc_df)
+        
+        
       }
+      
+      
+      
     }
   }) 
   
@@ -172,24 +255,24 @@ shinyServer(function(input, output){
       FRR <- survey_data$FRR_percent[i] / 100
       
       temp <- incprops(PrevH = Prop_Pos, 
-               RSE_PrevH = RSE_Prop_Pos,
-               PrevR = Prop_R, 
-               RSE_PrevR = RSE_Prop_R,
-               MDRI = MDRI, 
-               RSE_MDRI = RSE_MDRI,
-               FRR = FRR, 
-               RSE_FRR = RSE_FRR,
-               BigT = survey_data$BigT[i],
-               Boot = TRUE,
-               BS_Count = input$n_bootstraps,
-               cor_HR = survey_data$Corr_Prev_PropRecent[i])
+                       RSE_PrevH = RSE_Prop_Pos,
+                       PrevR = Prop_R, 
+                       RSE_PrevR = RSE_Prop_R,
+                       MDRI = MDRI, 
+                       RSE_MDRI = RSE_MDRI,
+                       FRR = FRR, 
+                       RSE_FRR = RSE_FRR,
+                       BigT = survey_data$BigT[i],
+                       Boot = TRUE,
+                       BS_Count = input$n_bootstraps,
+                       cor_HR = survey_data$Corr_Prev_PropRecent[i])
       
       inc_df$Year[i] <- survey_data$Year[i]
       inc_df$`Prev (%)`[i] <- survey_data$Prevalence_percent[i]
-        inc_df$`Prev SE`[i] <- survey_data$SE_Prevalence[i]
-        inc_df$`Inc (%)`[i] <- round(temp$Incidence$Incidence * 100, 3)
-        inc_df$`Inc SE`[i] <- round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3)
-        inc_df$Corr[i] <- round(temp$Incidence$Cor.PrevH.I, 3)
+      inc_df$`Prev SE`[i] <- survey_data$SE_Prevalence[i]
+      inc_df$`Inc (%)`[i] <- round(temp$Incidence$Incidence * 100, 3)
+      inc_df$`Inc SE`[i] <- round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3)
+      inc_df$Corr[i] <- round(temp$Incidence$Cor.PrevH.I, 3)
     }
     
     return(inc_df)
@@ -211,17 +294,17 @@ shinyServer(function(input, output){
   
   output$incidence_table_multiple <- renderTable(digits = 3, {
     if (!is.null(input$input_file)) {
-    incidence_calc_multiple()
+      incidence_calc_multiple()
     }
   })
   
   output$incidence_table_download <- downloadHandler(
-      filename = function() {
-        paste('estimates-', Sys.Date(), '.csv', sep='')
-      },
-      content = function(con) {
-        readr::write_csv(incidence_calc_multiple(), con)
-      }
-    )
+    filename = function() {
+      paste('estimates-', Sys.Date(), '.csv', sep='')
+    },
+    content = function(con) {
+      readr::write_csv(incidence_calc_multiple(), con)
+    }
+  )
   
 })

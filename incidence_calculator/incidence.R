@@ -134,8 +134,8 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   stopifnot(RSE_PrevR <= 1 & RSE_PrevR >= 0)
   stopifnot(MDRI >= 0)
   stopifnot(RSE_MDRI <= 1 & RSE_MDRI >= 0)
-  stopifnot(FRR <= 1 & FRR >= 0)
-  stopifnot(RSE_FRR <= 1 & RSE_FRR >= 0)
+  #stopifnot(FRR <= 1 & FRR >= 0)
+  #stopifnot(RSE_FRR <= 1 & RSE_FRR >= 0)
   
   if (sum(BMest == c("same.test", "FRR.indep", "MDRI.FRR.indep")) == 0) {
     stop("BMest option must be same.test, FRR.indep, or MDRI.FRR.indep")
@@ -163,12 +163,12 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   if (sum(FRR == 0) > 0) {
     warning("Zero estimated FRR")
   }
-  if (sum(RSE_FRR > 0.3) > 0) {
-    warning("RSE of estimated FRR is greater than 30%")
-  }
-  if (sum(RSE_FRR < 0.05) > 0) {
-    warning("RSE of estimated FRR is less than 5%")
-  }
+  # if (sum(RSE_FRR > 0.3) > 0) {
+  #   warning("RSE of estimated FRR is greater than 30%")
+  # }
+  # if (sum(RSE_FRR < 0.05) > 0) {
+  #   warning("RSE of estimated FRR is less than 5%")
+  # }
   if (sum(RSE_MDRI < 0.01) > 0) {
     warning("RSE of estimated MDRI is less than 1%")
   }

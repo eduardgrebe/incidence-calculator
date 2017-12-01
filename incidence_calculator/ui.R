@@ -12,7 +12,7 @@
 library(shiny)
 
 fluidPage(
-  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [beta 4, 01/12/2017]"),
+  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [beta 5, 01/12/2017]"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
                 tabPanel("Estimate Incidence",
@@ -37,8 +37,11 @@ fluidPage(
                                     column(3,
                                            wellPanel(
                                              radioButtons("data_type", label = h3("Data Type:"),
-                                                          c("Estimated Prevalences" = 1,
-                                                            "Sample Counts" = 2
+                                                          c("Sample Counts" = 2,
+                                                            "Estimated Prevalences" = 1,
+                                                            "Estimated population totals" = 3,
+                                                            "Estimated population proportions" = 4,
+                                                            "Prevalence and Incidence estimates" = 5
                                                           ),
                                                           selected = 1)
                                            ),
@@ -68,10 +71,10 @@ fluidPage(
                                                           step = 0.005, 
                                                           min = 0, 
                                                           max = 100),
-                                             sliderInput("BigT", 
+                                             numericInput("BigT", 
                                                          label = h5("Time Cutoff T (days):"), 
                                                          value = 730, 
-                                                         step = 5,
+                                                         step = 10,
                                                          min = 180, 
                                                          max = 1095
                                              )
@@ -163,6 +166,95 @@ fluidPage(
                                                #              label = h5("Corr prev. & prop. recent"),
                                                #              value = 0.200,
                                                #              min = -1, max = 1, step = 0.01)
+                                             )
+                                           ),
+                                           conditionalPanel(
+                                             condition = "input.data_type == 3",
+                                             wellPanel(
+                                               h3("Estimated population totals"),
+                                               em("Assume all positives have been tested"),
+                                               # em(tags$ul(
+                                               #   tags$li("Non-SRS, DEs calculated"),
+                                               #   tags$li("Corr prevalence and prop.recent estimated")
+                                               # )),
+                                               h4("Totals:"),
+                                               numericInput("N_Re", 
+                                                            label = h5("N Recent:"),
+                                                            value = 34.387, 
+                                                            min = 1,
+                                                            step = 1),
+                                               
+                                               numericInput("N_nonR", 
+                                                            label = h5("N Not Recent:"),
+                                                            value = 1062.097, 
+                                                            min = 1,
+                                                            step = 1),
+                                               
+                                               numericInput("N_Neg", 
+                                                            label = h5("N HIV Negative:"),
+                                                            value = 10903.516,
+                                                            min = 1,
+                                                            step = 1),
+                                               h4("Variance-Covariance:"),
+                                               numericInput("Var_N_R", 
+                                                            label = h5("Var(N Recent):"),
+                                                            value = 36.318769, 
+                                                            min = 0,
+                                                            step = 0.1),
+                                               numericInput("Var_N_nonR", 
+                                                            label = h5("Var(N Not Recent):"),
+                                                            value = 2025.663397,
+                                                            min = 0,
+                                                            step = 0.1),
+                                               numericInput("Var_N_Neg", 
+                                                            label = h5("Var(N HIV Negative):"),
+                                                            value = 29790.40436,
+                                                            min = 0,
+                                                            step = 0.1),
+                                               numericInput("Cov_R_NR", 
+                                                            label = h5("Cov(N Recent, N Not Recent):"),
+                                                            value = 4.727415, 
+                                                            min = 0,
+                                                            step = 0.1),
+                                               numericInput("Cov_R_Neg", 
+                                                            label = h5("Cov(N Recent, N HIV Negative):"),
+                                                            value = 35.68229,
+                                                            min = 0,
+                                                            step = 0.1),
+                                               numericInput("Cov_NR_Neg", 
+                                                            label = h5("Cov(N Not Recent, N HIV Negative):"),
+                                                            value = 1534.11235,
+                                                            min = 0)
+                                             )
+                                           ),
+                                           conditionalPanel(
+                                             condition = "input.data_type == 5",
+                                             wellPanel(
+                                               h3("Survey Data"),
+                                               em("Pre-calculated Prevalence and Incidence."),
+                                               em("Assume Prevalence and Prevalence of Recency uncorrelated"),
+                                               numericInput("PrevH",
+                                                            label = h5("Prevalence (%):"),
+                                                            value = 20, 
+                                                            step = 0.1, 
+                                                            min=0, 
+                                                            max = 100),
+                                               numericInput("SE_PrevH",
+                                                            label = h5("SE on Prevalence (percentage points):"),
+                                                            value = 0.7, 
+                                                            step = 0.1, 
+                                                            min=0),
+                                               numericInput("Inc",
+                                                            label = h5("Incidence (% p.a.):"), 
+                                                            value = 2.33, 
+                                                            step = 0.01, 
+                                                            min=0, 
+                                                            max = 100),
+                                               numericInput("SE_Inc",
+                                                            label = h5("SE on Incidence (percentage points):"),
+                                                            value = 0.56,
+                                                            step = 0.1, 
+                                                            min=0)
                                              )
                                            ),
                                            wellPanel(
