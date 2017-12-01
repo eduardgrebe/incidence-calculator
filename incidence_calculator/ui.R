@@ -225,7 +225,7 @@ fluidPage(
                                     br(),
                                     p("Re-uses some code under the GPL from:"),
                                     tags$ul(
-                                      tags$li("Lamin Juwara (McMaster University)"),
+                                      tags$li("Lamin Juwara (McGill University)"),
                                       tags$li("Stefano Ongarello (FIND)")
                                     ),
                                     br(),
