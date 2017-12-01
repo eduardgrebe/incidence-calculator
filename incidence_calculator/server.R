@@ -181,7 +181,7 @@ shinyServer(function(input, output){
                RSE_FRR = RSE_FRR,
                BigT = survey_data$BigT[i],
                Boot = TRUE,
-               BS_Count = 100000,
+               BS_Count = input$n_bootstraps,
                cor_HR = survey_data$Corr_Prev_PropRecent[i])
       
       inc_df$Year[i] <- survey_data$Year[i]
