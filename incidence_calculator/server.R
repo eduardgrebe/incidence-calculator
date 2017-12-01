@@ -100,7 +100,7 @@ shinyServer(function(input, output){
           need(input$N_H>=input$N_testR,"HIV-positive subjects tested for recency should be less than or equal to HIV-positive subjects among total sample size"),
           need(input$N_testR>=input$N_R,"The number of recent HIV cases should be less than or equal to HIV-positive subjects tested for recency"),
           need(input$DE_H >= 1, "Design effect on HIV prevalence must be >= 1"),
-          need(input$DE_R >= 1, "Design effect on Prop. recent | + must be >= 1"),
+          need(input$DE_R >= 1, "Design effect on Prop. recent | + must be >= 1")
           #need(!is.na(input$cor_PrevH_PrevR), "Please provide a valid correlation for PrevH and PrevR (default: 0)")
         )
         
