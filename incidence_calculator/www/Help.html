@@ -316,8 +316,8 @@ $(document).ready(function () {
 <li>Weight (based on estimates of demographic/geographic structure)</li>
 <li>Stratum (an ID indicating strata such as age, rage, (rural/urban) settlement type,.. )</li>
 <li>Gender/Sex (no need to settle heated debates here - M/F will do)</li>
-<li>HIV status (0/1 for -/+ respectively)</li>
-<li>Recency Status (0/1 for Non-recent/Recent respectively)</li>
+<li>HIV status (-/+)</li>
+<li>Recency Status (Non-recent/Recent)</li>
 </ul>
 <p>This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types, and there are standard R packages (like <em>survey</em>) which can do this. For the present application, the data should be reduced, by whatever means available to the user, to</p>
 <ul>
@@ -338,6 +338,7 @@ $(document).ready(function () {
 <p>Having chosen to enter survey estimates “via a form”, there is a further choice, to be made in the <em>Data type</em> box, namely whether to supply <em>estimated prevalences</em> or <em>sample counts</em>.</p>
 <section id="entering-raw-sample-counts" class="level4">
 <h4>Entering Raw Sample Counts</h4>
+<p>This option would hopefully be used merely to provide a preliminary analysis.</p>
 <p>By <em>counts</em> we here mean providing, in the <em>Survey Data</em> box, raw survey counts of</p>
 <ul>
 <li>subjects tested for HIV</li>
@@ -345,14 +346,29 @@ $(document).ready(function () {
 <li>recency ascertainments (on a completely random subset of positives)</li>
 <li>‘recent’ results</li>
 </ul>
-<p>This option would hopefully provide merely a preliminary analysis.</p>
-<p>In the preloaded example, the values are: * 5000 subjects tested for HIV * 1000 positive results (an unweighted HIV prevalence of 20%, estimated with a standard error of 0.56%) * 900 recency ascertainments on a completely random 900 of the 1000 positives, leading to 45 ‘recent’ (and hence 855 ‘non recent’) results, for a prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%</p>
-<p>It is worth changing the recency results into 1000 ascertainments (i.e. 100% coverage) and the number of ‘recent’ results to 50, and noting the slight improvement in precision this produces in the incidenc estimate</p>
+<p><em>Design Effects</em> can optionally be provided if there is some rational basis for choosing particular values. The defaults (values of one) mean the data will be interpreted as two binomial experiments - one to estimate prevalence, and an independent experiment to estimate prevalence of recent infection amongst HIV + subjects. The preloaded sample counts are:</p>
+<ul>
+<li>5000 subjects tested for HIV</li>
+<li>1000 positive results (an unweighted HIV prevalence of 20%, estimated with a standard error of 0.56%)</li>
+<li>900 recency ascertainments on a completely random 900 of the 1000 positives, leading to 45 ‘recent’ (and hence 855 ‘non recent’) results, for a prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%</li>
+</ul>
+<p>It is worth changing the recency results to be based on 1000 ascertainments (i.e. 100% coverage) and the number of ‘recent’ results to 50, thus preserving the estimated prevalence of recency amongst positives, and hence the incidence point estimate. Note the slight improvement in precision this produces in the incidenc estimate.</p>
 </section>
 <section id="entering-prevalences-estimated-with-sampling-complexities-accounted" class="level4">
 <h4>Entering Prevalences Estimated with Sampling Complexities Accounted</h4>
-<p>From the same underlying data set that generated the counts just used above, one should ideally take account of sampling complexities and directly obtain (for example by using the R package <em>survey</em>) * an estimate of HIV prevalence * an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive. * A variance/covariance matrix for these two prevalence estimates which can be entered into the <em>Survey Data</em> box when choosing the <em>Data Type</em> as <em>estimated prevalences</em></p>
-<p>This is preloaded with: * an estimate of HIV prevalence * an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive. * A variance/covariance matrix for these two prevalence estimates</p>
+<p>Using the same underlying data set that generated the counts just used above, one should ideally take account of sampling complexities and directly obtain (for example by using the R package <em>survey</em>) * an estimate of HIV prevalence * an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive. * A variance/covariance matrix for these two prevalence estimates which can be entered into the <em>Survey Data</em> box when choosing the <em>Data Type</em> as <em>estimated prevalences</em></p>
+<p>This is preloaded with: * an estimated HIV prevalence of 20% with a standard error of 1 percentage point * an estimated prevalence of ‘recent infection’ amongst those who are HIV positive, of 5%, with a standard error of 1 percentage point * a correlation of 0.1 for these two prevalence estimates</p>
+<p>Note the increased standard error, though same point estimate of incidence relative to the calculation based on raw survey counts. This is largely due to increased standard errors in the prevalences, but is also slightly responsive to the reported correlation between the prevalences, which has no analog in the raw counts case.</p>
+</section>
+<section id="providing-recency-test-properties" class="level4">
+<h4>Providing Recency Test Properties</h4>
+<p>Whether working with raw survey counts or preprocessed prevalence estimates, the form based (not file based) version of the <em>Calculate Incidence</em> tab provides a “Recency Test” box for entering the test performance defining parameters. These are preloaded to reflect a recency test with:</p>
+<ul>
+<li>an MDRI of 180 days, estimated with a standard error of 10 days</li>
+<li>an FRR of 0.5%, estimated with a standard error of 0.1 percentage points</li>
+<li>a recency time cut off (T) of 730 (i.e 2 Years) - set on a slider</li>
+</ul>
+<p>It is interesting to explore how rapidly precision deteriorates as one increases the FRR and/or it’s uncertainty. Leaving survey data fixed, and at suitably small FRR, the point estimate and precision of incidence both scale roughly inversely with MDRI.</p>
 </section>
 </section>
 <section id="entering-survey-results-via-a-file" class="level3">
@@ -371,12 +387,17 @@ $(document).ready(function () {
 <li>SE_FRR</li>
 <li>BigT</li>
 </ul>
+<p>Note that</p>
+<ul>
+<li>the <em>upload from file</em> option does not provide a raw survey counts implementation, and</li>
+<li>the recent infection test properties need to be specified for each row (each survey estimate summary)</li>
+</ul>
 <p>An example file can be <a href="example_survey_input.csv">downloaded here</a>, saved to the users storage, and then uploaded into the calculator.</p>
+<p>Both the uploaded file and the resulting incidence estiamtes are displayed on the screen, and the results can be downloaded as a CSV file.</p>
 </section>
-<section id="providing-recency-test-properties" class="level3">
-<h3>Providing Recency Test Properties</h3>
-<p>The Recency Test performance defining parameters are supplied in the fields of the ‘Recency Test’ box, which is found on both the form based and file based versions of the <em>Calculate Incidence</em> tab. These are preloaded to reflect a recency test with * an MDRI of 200 days, estimated with a standard error of 10 days * an FRR of 0.5%, estimated with a standard error of 0.1 percentage points * a recency time cut off (T) of 730 (i.e 2 Years) - set on a slider</p>
-<p>It is interesting to explore how rapidly precision deteriorates as one increases the FRR and/or it’s uncertainty. Leaving survey data fixed, and at suitably small FRR, the point estimate and precision of incidence both scale roughly inversely with MDRI.</p>
+<section id="specifying-number-of-bootstrap-iterations" class="level3">
+<h3>Specifying Number of Bootstrap Iterations</h3>
+<p>For all calculations, the uncertainty analysis is handled by boostrapping prevalence estimates (of HIV and of recent infection amongst HIV positives) and test property estimates from the estimated gaussian distributions implied by the input parameters supplied. This leads to a more faithful handling of the non linearities in the functional form of the Kassanjee estimator than would be produced by a delta method approach, but naturally does not address any deviations from normality in teh prevalence estimation process - which is expected to be a minor point. The proposed value of 100,000 iterations preloaded into the form leads to high reproducibility of the uncertainty estimates and no significant delays while refreshing the calculator results when inputs are changed. It is worth triggering a refresh of the calculation by changing any parameter back and forth between two values and checking the reproducibility of the standard error estimates, and the prevalence/incidence correlation estimate.</p>
 </section>
 </section>
 
