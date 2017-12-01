@@ -84,10 +84,10 @@ shinyServer(function(input, output){
                          cor_HR = input$cor_PrevH_PrevR)
         
         inc_df <- dplyr::data_frame(
-          `%HIV+` = round(input$PrevH, 3), #  * 100 / 100 cluge to make trailing zeros appear
-          `%HIV+ SE` = round(input$SE_PrevH, 3),
-          `%Inc` = round(temp$Incidence$Incidence * 100, 3),
-          `%Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
+          `Prev (%)` = round(input$PrevH, 3), #  * 100 / 100 cluge to make trailing zeros appear
+          `Prev SE` = round(input$SE_PrevH, 3),
+          `Inc (%)*` = round(temp$Incidence$Incidence * 100, 3),
+          `Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
           Corr = round(temp$Incidence$Cor.PrevH.I,3)
         )
         
@@ -128,10 +128,10 @@ shinyServer(function(input, output){
                                 DE_R = input$DE_R)
         
         inc_df <- dplyr::data_frame(
-          `%HIV+` = temp_prev$PrevH * 100,
-          `%HIV+ SE` = temp_prev$RSE_PrevH * temp_prev$PrevH * 100,
-          `%Inc` = round(temp$Incidence$Incidence * 100, 3),
-          `%Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
+          `Prev (%)` = temp_prev$PrevH * 100,
+          `Prev SE` = temp_prev$RSE_PrevH * temp_prev$PrevH * 100,
+          `Inc (%)*` = round(temp$Incidence$Incidence * 100, 3),
+          `Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
           Corr = round(temp$Incidence$Cor.PrevH.I, 3)
         )
         
@@ -154,10 +154,10 @@ shinyServer(function(input, output){
     
     inc_df <- dplyr::data_frame(
       Year = rep(NA,n_s),
-      `%HIV+` = rep(NA,n_s),
-      `%HIV+ SE` = rep(NA,n_s),
-      `%Inc` = rep(NA,n_s),
-      `%Inc SE` = rep(NA,n_s),
+      `Prev (%)` = rep(NA,n_s),
+      `Prev SE` = rep(NA,n_s),
+      `Inc (%)` = rep(NA,n_s),
+      `Inc SE` = rep(NA,n_s),
       Corr = rep(NA,n_s)
     )
     
@@ -185,10 +185,10 @@ shinyServer(function(input, output){
                cor_HR = survey_data$Corr_Prev_PropRecent[i])
       
       inc_df$Year[i] <- survey_data$Year[i]
-      inc_df$`%HIV+`[i] <- survey_data$Prevalence_percent[i]
-        inc_df$`%HIV+ SE`[i] <- survey_data$SE_Prevalence[i]
-        inc_df$`%Inc`[i] <- round(temp$Incidence$Incidence * 100, 3)
-        inc_df$`%Inc SE`[i] <- round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3)
+      inc_df$`Prev (%)`[i] <- survey_data$Prevalence_percent[i]
+        inc_df$`Prev SE`[i] <- survey_data$SE_Prevalence[i]
+        inc_df$`Inc (%)`[i] <- round(temp$Incidence$Incidence * 100, 3)
+        inc_df$`Inc SE`[i] <- round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3)
         inc_df$Corr[i] <- round(temp$Incidence$Cor.PrevH.I, 3)
     }
     
