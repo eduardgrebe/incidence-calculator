@@ -69,7 +69,7 @@ F <- function(totals){  # totals = {n_recent, n_not_recent, n_negative}
   c(prev        = sum(totals[1:2]) / sum(totals),
     prop_recent = unname(totals[1] / sum(totals[1:2])))
 }
-dF <- function(x){
+dF <- function(totals){
   cbind(prev        = unname(c(totals[3], totals[3], -sum(totals[1:2])) / sum(totals)^2),
         prop_recent = unname(c(totals[2], -totals[1], 0) / sum(totals[1:2])^2))
 }
@@ -87,7 +87,7 @@ G <- function(props){  # props = {prop_recent, prop_not_recent, prop_negative}
   c(prev        = sum(props[1:2]),
     prop_recent = unname(props[1] / sum(props[1:2])))
 }
-dG <- function(y){
+dG <- function(props){
   cbind(prev        = c(1, 1, 0),
         prop_recent = unname(c(props[2], -props[1], 0) / sum(props[1:2])^2))
 }
@@ -98,3 +98,58 @@ estG_V <- t(dG(props)) %*% vcov(props) %*% dG(props)
 estG
 sqrt(diag(estG_V)) # standard errors of {prevalence, prop_recent}
 cov2cor(estG_V)    # correlation of {prevalence, prop_recent}
+
+
+#' ## Incomplete recency testing
+#'
+#' Suppose that some proportion of HIV positive tests did not undergo recency testing. Then the proportion recent is calculated among only those who underwent recency testing whilst those not tested for recent infection are included in the prevlance calculation. The formulas for the transformation are easily updated to reflect this.
+#'
+#' First simulate a 10% proportion of HIV positive samples that did not undergo recency testing.
+
+head(data)
+data$recent2 <- factor(data$recent, c("recent", "not recent", "no lag", "negative"))
+data$recent2[data$hivstatus == 1 & rbinom(nrow(data), 1, 0.1) == 1] <- "no lag"
+
+table(data$recent)
+table(data$recent2)
+
+des <- svydesign(~cluster, strata=~stratum, data=data, weights=~weight_norm)
+
+totals2 <- svytotal(~recent2, des)
+props2 <- svymean(~recent2, des)
+totals2
+props2
+
+#' Update transformations to account for proportion not tested.
+Fstar <- function(totals){ # totals = {n_recent, n_not_recent, n_not_tested, n_negative}
+  c(prev        = sum(totals[1:3]) / sum(totals),
+    prop_recent = unname(totals[1] / sum(totals[1:2])))
+}
+
+dFstar <- function(totals){
+  cbind(prev        = unname(c(totals[4], totals[4], totals[4], -sum(totals[1:3])) / sum(totals)^2),
+        prop_recent = unname(c(totals[2], -totals[1], 0, 0) / sum(totals[1:2])^2))
+}
+          
+estF2 <- Fstar(totals2) # {prevalence, prop_recent}
+estF2_V <- t(dFstar(totals2)) %*% vcov(totals2) %*% dFstar(totals2)
+estF2
+sqrt(diag(estF2_V)) # standard errors of {prevalence, prop_recent}
+cov2cor(estF2_V)    # correlation of {prevalence, prop_recent}
+
+#' And now the case of population proportions
+Gstar <- function(props){  # props = {prop_recent, prop_not_recent, prop_not_tested, prop_negative}
+  c(prev        = sum(props[1:3]),
+    prop_recent = unname(props[1] / sum(props[1:2])))
+}
+dGstar <- function(props){
+  cbind(prev        = c(1, 1, 1, 0),
+        prop_recent = unname(c(props[2], -props[1], 0, 0) / sum(props[1:2])^2))
+}
+                      
+estG2 <- Gstar(props2) # {prevalence, prop_recent}
+estG2_V <- t(dGstar(props2)) %*% vcov(props2) %*% dGstar(props2)
+
+estG2
+sqrt(diag(estG2_V)) # standard errors of {prevalence, prop_recent}
+cov2cor(estG2_V)    # correlation of {prevalence, prop_recent}
