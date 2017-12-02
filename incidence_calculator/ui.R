@@ -12,7 +12,8 @@
 library(shiny)
 
 fluidPage(
-  img(src='SACEMA_logo.jpg', align = "right"),
+  img(src='2012_logo_example1_en.jpg', align = "right", width=350,
+      style="border: 25px solid white;"),
   titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [beta 6, 02/12/2017]"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
@@ -367,7 +368,12 @@ fluidPage(
                                    p("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.")
                                    ),
                          br(),
-                         img(src='SACEMA_logo.jpg', align = "right")
+                         img(src='MRC_COAM_colour_web.png', align = "right",
+                             style="height: 80px; border: 10px solid white;"),
+                         img(src='imp_ml_1cs_ps_056486_001.jpg', align = "right",
+                             style="height: 80px; border: 10px solid white;"),
+                         img(src='SACEMA_logo.jpg', align = "right",
+                             style="height: 100px; border: 10px solid white;")
                          )
                 )
   )
