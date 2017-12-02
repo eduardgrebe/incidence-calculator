@@ -137,6 +137,11 @@ estF2
 sqrt(diag(estF2_V)) # standard errors of {prevalence, prop_recent}
 cov2cor(estF2_V)    # correlation of {prevalence, prop_recent}
 
+
+
+
+
+
 #' And now the case of population proportions
 Gstar <- function(props){  # props = {prop_recent, prop_not_recent, prop_not_tested, prop_negative}
   c(prev        = sum(props[1:3]),

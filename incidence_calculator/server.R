@@ -148,21 +148,120 @@ shinyServer(function(input, output){
       } else if (input$data_type == 3) {
         #browser()
         
+        if (input$N_notT == 0) {
+          prev <- (input$N_Re + input$N_nonR) / (input$N_Re + input$N_nonR + input$N_Neg)
+          prevR <- input$N_Re / (input$N_Re + input$N_nonR)
+          
+          
+          vcovmat <- matrix(nrow=3,ncol = 3)
+          vcovmat[1,1] <- input$Var_N_R
+          vcovmat[2,2] <- input$Var_N_nonR
+          vcovmat[3,3] <- input$Var_N_Neg
+          vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NR
+          vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_Neg
+          vcovmat[3,2] <- vcovmat[2,3] <- input$Cov_NR_Neg
+          
+          vars <- cbind(c(input$N_Neg, input$N_Neg, - (input$N_Re + input$N_nonR)) / (input$N_Re + input$N_nonR + input$N_Neg)^2,
+                        c(input$N_nonR, -input$N_Re, 0) / (input$N_Re + input$N_nonR)^2)
+          
+          propvars <- t(vars) %*% vcovmat %*% vars
+          
+          SEs <- sqrt(diag(propvars))
+          
+          corr <- cov2cor(propvars)[1,2]
+          
+          temp <- incprops(PrevH = prev, 
+                           RSE_PrevH = SEs[1]/prev,
+                           PrevR = prevR, 
+                           RSE_PrevR = SEs[2]/prevR,
+                           MDRI = MDRI, 
+                           RSE_MDRI = RSE_MDRI,
+                           FRR = FRR, 
+                           RSE_FRR = RSE_FRR,
+                           BigT = input$BigT,
+                           Boot = TRUE,
+                           BS_Count = input$n_bootstraps,
+                           cor_HR = corr)
+          
+          inc_df <- dplyr::data_frame(
+            `Prev (%)` = round(prev * 100, 3),
+            `Prev SE` =  round(SEs[1] * 100, 3),
+            `Inc (%)*` = round(temp$Incidence$Incidence * 100, 3),
+            `Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
+            Corr = round(temp$Incidence$Cor.PrevH.I, 3)
+          )
+          return(inc_df)
+          
+        } else if (input$N_notT > 0) {
+          
+          prev <- (input$N_Re + input$N_nonR + input$N_notT) / (input$N_Re + input$N_nonR + input$N_notT + input$N_Neg)
+          prevR <- input$N_Re / (input$N_Re + input$N_nonR)
+          
+          
+          vcovmat <- matrix(nrow=4,ncol = 4)
+          vcovmat[1,1] <- input$Var_N_R
+          vcovmat[2,2] <- input$Var_N_nonR
+          vcovmat[3,3] <- input$Var_N_notT
+          vcovmat[4,4] <- input$Var_N_Neg
+          vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NR
+          vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_notT
+          vcovmat[4,1] <- vcovmat[1,4] <- input$Cov_R_Neg
+          vcovmat[2,3] <- vcovmat[3,2] <- input$Cov_NR_notT
+          vcovmat[3,4] <- vcovmat[4,3] <- input$Cov_NotT_Neg
+          vcovmat[4,2] <- vcovmat[2,4] <- input$Cov_NR_Neg
+          
+          vars <- cbind(c(input$N_Neg, input$N_Neg, input$N_Neg, -(input$N_Re + input$N_nonR + input$N_notT)) / (input$N_Re + input$N_nonR + input$N_notT + input$N_Neg)^2,
+                        c(input$N_nonR, -input$N_Re, 0, 0) / (input$N_Re + input$N_nonR)^2)
+          
+          propvars <- t(vars) %*% vcovmat %*% vars
+          
+          SEs <- sqrt(diag(propvars))
+          
+          corr <- cov2cor(propvars)[1,2]
+          
+          temp <- incprops(PrevH = prev, 
+                           RSE_PrevH = SEs[1]/prev,
+                           PrevR = prevR, 
+                           RSE_PrevR = SEs[2]/prevR,
+                           MDRI = MDRI, 
+                           RSE_MDRI = RSE_MDRI,
+                           FRR = FRR, 
+                           RSE_FRR = RSE_FRR,
+                           BigT = input$BigT,
+                           Boot = TRUE,
+                           BS_Count = input$n_bootstraps,
+                           cor_HR = corr)
+          
+          inc_df <- dplyr::data_frame(
+            `Prev (%)` = round(prev * 100, 3),
+            `Prev SE` =  round(SEs[1] * 100, 3),
+            `Inc (%)*` = round(temp$Incidence$Incidence * 100, 3),
+            `Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
+            Corr = round(temp$Incidence$Cor.PrevH.I, 3)
+          )
+          return(inc_df)
+        }
         
-        prev <- (input$N_Re + input$N_nonR) / (input$N_Re + input$N_nonR + input$N_Neg)
-        prevR <- input$N_Re / (input$N_Re + input$N_nonR)
+        
+      } else if (input$data_type == 4) {
+        prev <- sum(input$P_Re, input$P_nonR, input$P_notT)
+        prevR <- input$P_Re / sum(input$P_Re, input$P_nonR)
         
         
-        vcovmat <- matrix(nrow=3,ncol = 3)
-        vcovmat[1,1] <- input$Var_N_R
-        vcovmat[2,2] <- input$Var_N_nonR
-        vcovmat[3,3] <- input$Var_N_Neg
-        vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NR
-        vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_Neg
-        vcovmat[3,2] <- vcovmat[2,3] <- input$Cov_NR_Neg
+        vcovmat <- matrix(nrow=4,ncol = 4)
+        vcovmat[1,1] <- input$Var_P_R
+        vcovmat[2,2] <- input$Var_P_nonR
+        vcovmat[3,3] <- input$Var_P_notT
+        vcovmat[4,4] <- input$Var_P_Neg
+        vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NRp
+        vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_notTp
+        vcovmat[4,1] <- vcovmat[1,4] <- input$Cov_R_Negp
+        vcovmat[2,3] <- vcovmat[3,2] <- input$Cov_NR_notTp
+        vcovmat[3,4] <- vcovmat[4,3] <- input$Cov_NotT_Negp
+        vcovmat[4,2] <- vcovmat[2,4] <- input$Cov_NR_Negp
         
-        vars <- cbind(c(input$N_Neg, input$N_Neg, - (input$N_Re + input$N_nonR)) / (input$N_Re + input$N_nonR + input$N_Neg)^2,
-              c(input$N_nonR, -input$N_Re, 0) / (input$N_Re + input$N_nonR)^2)
+        vars <- cbind(c(1, 1, 1, 0),
+                      c(input$P_nonR, -input$P_Re, 0, 0) / sum(input$P_Re, input$P_nonR)^2)
         
         propvars <- t(vars) %*% vcovmat %*% vars
         
@@ -190,10 +289,7 @@ shinyServer(function(input, output){
           `Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
           Corr = round(temp$Incidence$Cor.PrevH.I, 3)
         )
-        
-        
-      } else if (input$data_type == 4) {
-        
+        return(inc_df)
         
       } else if (input$data_type == 5) {
         

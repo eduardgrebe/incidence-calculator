@@ -12,7 +12,7 @@
 library(shiny)
 
 fluidPage(
-  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [beta 5, 01/12/2017]"),
+  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [beta 6, 02/12/2017]"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
                 tabPanel("Estimate Incidence",
@@ -41,7 +41,7 @@ fluidPage(
                                                             "Estimated Prevalences" = 1,
                                                             "Estimated population totals" = 3,
                                                             "Estimated population proportions" = 4,
-                                                            "Prevalence and Incidence estimates" = 5
+                                                            "Estimated Prevalence and Incidence" = 5
                                                           ),
                                                           selected = 1)
                                            ),
@@ -72,11 +72,11 @@ fluidPage(
                                                           min = 0, 
                                                           max = 100),
                                              numericInput("BigT", 
-                                                         label = h5("Time Cutoff T (days):"), 
-                                                         value = 730, 
-                                                         step = 10,
-                                                         min = 180, 
-                                                         max = 1095
+                                                          label = h5("Time Cutoff T (days):"), 
+                                                          value = 730, 
+                                                          step = 10,
+                                                          min = 180, 
+                                                          max = 1095
                                              )
                                            )
                                            
@@ -86,7 +86,7 @@ fluidPage(
                                            conditionalPanel(
                                              condition = "input.data_type == 1",
                                              wellPanel(
-                                               h3("Survey Data"),
+                                               h3("Prevalences"),
                                                em("Pre-processed Data:"),
                                                em(tags$ul(
                                                  tags$li("Use standard complex survey methods"),
@@ -125,7 +125,7 @@ fluidPage(
                                            conditionalPanel(
                                              condition = "input.data_type == 2",
                                              wellPanel(
-                                               h3("Survey Data"),
+                                               h3("Sample Counts"),
                                                # em("Assumptions:"),
                                                # em(tags$ul(
                                                #   tags$li("Non-SRS, DEs calculated"),
@@ -171,8 +171,8 @@ fluidPage(
                                            conditionalPanel(
                                              condition = "input.data_type == 3",
                                              wellPanel(
-                                               h3("Estimated population totals"),
-                                               em("Assume all positives have been tested"),
+                                               h3("Population Totals"),
+                                               em("If all positives were tested for recency, set N not tested to 0."),
                                                # em(tags$ul(
                                                #   tags$li("Non-SRS, DEs calculated"),
                                                #   tags$li("Corr prevalence and prop.recent estimated")
@@ -180,14 +180,19 @@ fluidPage(
                                                h4("Totals:"),
                                                numericInput("N_Re", 
                                                             label = h5("N Recent:"),
-                                                            value = 34.387, 
+                                                            value = 31.331, 
                                                             min = 1,
                                                             step = 1),
                                                
                                                numericInput("N_nonR", 
                                                             label = h5("N Not Recent:"),
-                                                            value = 1062.097, 
+                                                            value = 954.639, 
                                                             min = 1,
+                                                            step = 1),
+                                               numericInput("N_notT", 
+                                                            label = h5("N Not Tested for Recency:"),
+                                                            value = 110.514, 
+                                                            min = 0,
                                                             step = 1),
                                                
                                                numericInput("N_Neg", 
@@ -198,41 +203,107 @@ fluidPage(
                                                h4("Variance-Covariance:"),
                                                numericInput("Var_N_R", 
                                                             label = h5("Var(N Recent):"),
-                                                            value = 36.318769, 
-                                                            min = 0,
-                                                            step = 0.1),
+                                                            value = 32.4219032),
                                                numericInput("Var_N_nonR", 
                                                             label = h5("Var(N Not Recent):"),
-                                                            value = 2025.663397,
-                                                            min = 0,
-                                                            step = 0.1),
+                                                            value = 1784.879919),
+                                               numericInput("Var_N_notT", 
+                                                            label = h5("Var(N Not Tested):"),
+                                                            value = 122.1672748),
                                                numericInput("Var_N_Neg", 
                                                             label = h5("Var(N HIV Negative):"),
-                                                            value = 29790.40436,
-                                                            min = 0,
-                                                            step = 0.1),
+                                                            value = 29790.404358),
                                                numericInput("Cov_R_NR", 
                                                             label = h5("Cov(N Recent, N Not Recent):"),
-                                                            value = 4.727415, 
-                                                            min = 0,
-                                                            step = 0.1),
+                                                            value = -0.695587),
+                                               numericInput("Cov_R_notT", 
+                                                            label = h5("Cov(N Recent, N Not Tested):"),
+                                                            value = -0.9200922),
                                                numericInput("Cov_R_Neg", 
                                                             label = h5("Cov(N Recent, N HIV Negative):"),
-                                                            value = 35.68229,
-                                                            min = 0,
-                                                            step = 0.1),
+                                                            value = -5.589968),
+                                               numericInput("Cov_NR_notT", 
+                                                            label = h5("Cov(N Not Recent, N Not Tested):"),
+                                                            value = 67.5996290),
                                                numericInput("Cov_NR_Neg", 
                                                             label = h5("Cov(N Not Recent, N HIV Negative):"),
-                                                            value = 1534.11235,
-                                                            min = 0)
+                                                            value = 1283.403260),
+                                               numericInput("Cov_NotT_Neg", 
+                                                            label = h5("Cov(N Not Tested, N HIV Negative):"),
+                                                            value = 291.981347)
+                                             )
+                                           ),
+                                           conditionalPanel(
+                                             condition = "input.data_type == 4",
+                                             wellPanel(
+                                               h3("Population Proportions"),
+                                               
+                                               numericInput("P_Re", 
+                                                            label = h5("Proportion Recent:"),
+                                                            value = 0.0026109, 
+                                                            min = 0,
+                                                            max = 1,
+                                                            step = 0.001),
+                                               numericInput("P_nonR", 
+                                                            label = h5("Proportion Not Recent:"),
+                                                            value = 0.0795532, 
+                                                            min = 0,
+                                                            max = 1,
+                                                            step = 0.001),
+                                               numericInput("P_notT", 
+                                                            label = h5("Proportion Not Tested for Recency:"),
+                                                            value = 0.0092095, 
+                                                            min = 0,
+                                                            max = 1,
+                                                            step = 0.001),
+                                               numericInput("P_Neg", 
+                                                            label = h5("Proportion HIV Negative:"),
+                                                            value = 0.9086263,
+                                                            min = 0,
+                                                            max = 1,
+                                                            step = 0.001),
+                                               h4("Variance-Covariance:"),
+                                               numericInput("Var_P_R", 
+                                                            label = h5("Var(Prop. Recent):"),
+                                                            value = 2.258946e-07, 
+                                                            min = 0),
+                                               numericInput("Var_P_nonR", 
+                                                            label = h5("Var(Prop. Not Recent):"),
+                                                            value = 1.046920e-05,
+                                                            min = 0),
+                                               numericInput("Var_P_notT", 
+                                                            label = h5("Var(Prop. Not Tested):"),
+                                                            value = 8.074968e-07,
+                                                            min = 0),
+                                               numericInput("Var_P_Neg", 
+                                                            label = h5("Var(N HIV Negative):"),
+                                                            value = 1.179336e-05,
+                                                            min = 0),
+                                               numericInput("Cov_R_NRp", 
+                                                            label = h5("Cov(Prop. Recent, Prop. Not Recent):"),
+                                                            value = -2.512008e-08),
+                                               numericInput("Cov_R_notTp", 
+                                                            label = h5("Cov(Prop. Recent, Prop. Not Tested):"),
+                                                            value = -1.087571e-08),
+                                               numericInput("Cov_R_Negp", 
+                                                            label = h5("Cov(Prop. Recent, Prop. HIV Negative):"),
+                                                            value = -1.898988e-07),
+                                               numericInput("Cov_NR_notTp", 
+                                                            label = h5("Cov(Prop. Not Recent, Prop. Not Tested):"),
+                                                            value = 1.813772e-07),
+                                               numericInput("Cov_NR_Negp", 
+                                                            label = h5("Cov(Prop. Not Recent, Prop. HIV Negative):"),
+                                                            value = -1.062546e-05),
+                                               numericInput("Cov_NotT_Negp", 
+                                                            label = h5("Cov(Prop. Not Tested, Prop. HIV Negative):"),
+                                                            value = -9.779983e-07)
                                              )
                                            ),
                                            conditionalPanel(
                                              condition = "input.data_type == 5",
                                              wellPanel(
-                                               h3("Survey Data"),
-                                               em("Pre-calculated Prevalence and Incidence."),
-                                               em("Assume Prevalence and Prevalence of Recency uncorrelated"),
+                                               h3("Prevalence and Incidence"),
+                                               em("Pre-calculated Prevalence and Incidence. Assume Prevalence and Prevalence of Recency uncorrelated."),
                                                numericInput("PrevH",
                                                             label = h5("Prevalence (%):"),
                                                             value = 20, 
@@ -355,10 +426,7 @@ fluidPage(
                                     p(strong("Authors:")),
                                     tags$ul(
                                       tags$li(a("Eduard Grebe (SACEMA, Stellenbosch University)", href = "mailto:eduardgrebe@sun.ac.za")),
-                                      tags$li(a("Alex Welte (SACEMA, Stellenbosch University)", href = "mailto:alexwelte@sun.ac.za"))
-                                    ),
-                                    p(strong("Project lead:")),
-                                    tags$ul(
+                                      tags$li(a("Alex Welte (SACEMA, Stellenbosch University)", href = "mailto:alexwelte@sun.ac.za")),
                                       tags$li(a("Jeffrey Eaton (Imperial College London)", href = "mailto:jeffrey.eaton@imperial.ac.uk"))
                                     ),
                                     br(),

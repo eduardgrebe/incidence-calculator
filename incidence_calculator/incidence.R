@@ -134,8 +134,8 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   stopifnot(RSE_PrevR <= 1 & RSE_PrevR >= 0)
   stopifnot(MDRI >= 0)
   stopifnot(RSE_MDRI <= 1 & RSE_MDRI >= 0)
-  #stopifnot(FRR <= 1 & FRR >= 0)
-  #stopifnot(RSE_FRR <= 1 & RSE_FRR >= 0)
+  stopifnot(FRR <= 1 & FRR >= 0)
+  stopifnot(RSE_FRR <= 1 & RSE_FRR >= 0)
   
   if (sum(BMest == c("same.test", "FRR.indep", "MDRI.FRR.indep")) == 0) {
     stop("BMest option must be same.test, FRR.indep, or MDRI.FRR.indep")
@@ -438,7 +438,8 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   # test of differences when SS=infinity gives 4 p-values for 2 surveys
   # (redundant). Later this will be reduced down for outputing results.
   p_value <- stats::pnorm((-abs(deltaI_Est_Vec)/SD_deltaI), mean = 0, sd = 1) * 2
-  if (Boot == F) {
+  #browser()
+  if (Boot == FALSE) {
     p_value.infSS <- stats::pnorm((-abs(deltaI_Est_Vec)/sqrt(DM_Var_deltaI.infSS)),
                                   mean = 0, sd = 1) * 2
   }
@@ -542,7 +543,7 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
     PE = FRR,
     CI.LB = stats::qnorm(alpha/2, mean = FRR, sd = sqrt(Var_FRR)),
     CI.UB = stats::qnorm(1 - alpha/2, mean = FRR, sd = sqrt(Var_FRR))
-    ), digits = 4)
+  ), digits = 4)
   
   if (BMest == "same.test") {
     MDRI.CI <- MDRI.CI[1, ]
@@ -562,24 +563,24 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
                       digits = 6)
     if (Boot == FALSE) {
       output <- list(Incidence.Statistics = dplyr::data_frame(Incidence = out_I_Est,
-                                                       CI.LB = out_CI_I_lo, CI.UB = out_CI_I_up, RSE.I = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS), #SE.I = out_RSE_I*out_I_Est, 
+                                                              CI.LB = out_CI_I_lo, CI.UB = out_CI_I_up, RSE.I = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS), #SE.I = out_RSE_I*out_I_Est, 
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     } else {
       output <- list(Incidence.Statistics = dplyr::data_frame(Incidence = as.numeric(as.character(out_I_Est)),
-                                                       CI.LB = as.numeric(as.character(out_CI_I_lo)), 
-                                                       CI.UB = as.numeric(as.character(out_CI_I_up)), 
-                                                       RSE.I = as.numeric(as.character(out_RSE_I)), 
-                                                       Cov.PrevH.I = BS_I_PrevH_cov_vec[[1]], ##SE.I = out_RSE_I*out_I_Est, 
-                                                       Cor.PrevH.I = BS_I_PrevH_cor_vec[[1]]),
+                                                              CI.LB = as.numeric(as.character(out_CI_I_lo)), 
+                                                              CI.UB = as.numeric(as.character(out_CI_I_up)), 
+                                                              RSE.I = as.numeric(as.character(out_RSE_I)), 
+                                                              Cov.PrevH.I = BS_I_PrevH_cov_vec[[1]], ##SE.I = out_RSE_I*out_I_Est, 
+                                                              Cor.PrevH.I = BS_I_PrevH_cor_vec[[1]]),
                      Annual.Risk.of.Infection = ARI.list, MDRI.CI = MDRI.CI, FRR.CI = FRR.CI)
     }
   } else if (Boot == FALSE) {
     Incidence.Statistics = dplyr::data_frame(survey = survey_no, Incidence = out_I_Est,
-                                      `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS)
+                                             `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I, RSE.Inf.SS = out_RSE_I.infSS)
     Incidence.Difference.Statistics = dplyr::data_frame(compare = delta_code, Diff = out_deltaI_Est,
-                                                 `CI Diff low` = out_CI_deltaI_Mat[, 1], `CI Diff up` = out_CI_deltaI_Mat[,
-                                                                                                                          2], `RSE Diff` = out_RSE_deltaI, `RSE Diff Inf.SS` = out_RSE.deltaI.infSS,
-                                                 `p-value` = out_p_value, `p-value.Inf.SS` = out_p_value.infSS)
+                                                        `CI Diff low` = out_CI_deltaI_Mat[, 1], `CI Diff up` = out_CI_deltaI_Mat[,
+                                                                                                                                 2], `RSE Diff` = out_RSE_deltaI, `RSE Diff Inf.SS` = out_RSE.deltaI.infSS,
+                                                        `p-value` = out_p_value, `p-value.Inf.SS` = out_p_value.infSS)
     Incidence.Statistics = Incidence.Statistics[which(Incidence.Statistics[,
                                                                            1] != ""), ]
     Incidence.Difference.Statistics = Incidence.Difference.Statistics[which(!is.na(Incidence.Difference.Statistics[,
@@ -592,10 +593,10 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   } else {
     #browser()
     Incidence.Difference.Statistics = dplyr::data_frame(compare = delta_code, Diff = out_deltaI_Est,
-                                                 `CI Diff low` = out_CI_deltaI_Mat[, 1], `CI Diff up` = out_CI_deltaI_Mat[,
-                                                                                                                          2], `RSE Diff` = out_RSE_deltaI, `p-value` = out_p_value)
+                                                        `CI Diff low` = out_CI_deltaI_Mat[, 1], `CI Diff up` = out_CI_deltaI_Mat[,
+                                                                                                                                 2], `RSE Diff` = out_RSE_deltaI, `p-value` = out_p_value)
     Incidence.Statistics = dplyr::data_frame(survey = survey_no, Incidence = out_I_Est,
-                                      `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I)
+                                             `CI low` = out_CI_I_lo, `CI up` = out_CI_I_up, RSE = out_RSE_I)
     Incidence.Statistics = Incidence.Statistics[which(Incidence.Statistics[,
                                                                            1] != ""), ]
     Incidence.Difference.Statistics = Incidence.Difference.Statistics[which(!is.na(Incidence.Difference.Statistics[,
@@ -612,9 +613,9 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   ari_tab <- dplyr::as_data_frame(output$Annual.Risk.of.Infection)
   
   function_output <- list(Incidence = inc_tab,
-                           Annual.Risk.Infection = ari_tab,
-                           MDRI.CI = MDRI.CI,
-                           FRR.CI = FRR.CI)
+                          Annual.Risk.Infection = ari_tab,
+                          MDRI.CI = MDRI.CI,
+                          FRR.CI = FRR.CI)
   
   #return(output)
   return(function_output)
