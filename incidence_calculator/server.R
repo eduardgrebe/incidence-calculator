@@ -12,6 +12,8 @@
 library(shiny)
 source('incidence.R')
 
+num <- as.numeric # improve code readibility
+
 shinyServer(function(input, output){
   
   determine_tab <- reactive({
@@ -22,61 +24,61 @@ shinyServer(function(input, output){
   incidence_calc <- reactive({
     #browser()
     
-    RSE_MDRI <- input$SE_MDRI / input$MDRI
-    MDRI <- input$MDRI
+    RSE_MDRI <- num(input$SE_MDRI) / num(input$MDRI)
+    MDRI <- num(input$MDRI)
     
-    FRR <- input$FRR / 100
-    RSE_FRR  <- ifelse(input$FRR == 0, 0, input$SE_FRR / input$FRR)
+    FRR <- num(input$FRR) / 100
+    RSE_FRR  <- ifelse(num(input$FRR) == 0, 0, num(input$SE_FRR) / num(input$FRR))
     FRR<- ifelse(FRR==0,0.0000000001,FRR) # cheating
     
     if (input$single_multiple == 1) {
       validate(
-        need(input$SE_FRR >= 0, 'Please provide a valid SE for FRR'),
-        #need(input$SE_FRR <= 100, 'Please provide a valid SE for FRR'),
-        need(!(input$SE_FRR == "" ), 'Please provide a value for SE_FRR'),
-        need(input$SE_MDRI >= 0, 'Please provide a valid SE for MDRI'),
-        #need(input$SE_MDRI <= 100, 'Please provide a valid SE for MDRI'),
-        need(!(input$SE_MDRI == "" ), 'Please provide a value for SE_MDRI'),
-        need(input$MDRI >= 0, 'Please provide a valid value for MDRI'),
-        need(input$FRR >= 0, 'Please provide a valid value for FRR'),
-        need(input$FRR <= 100, 'Please provide a valid value for FRR'),
-        need(input$BigT, 'Please provide a value for the cut-off time'),
-        need(input$BigT > 120, 'Please provide a valid value for the cut-off time (>120)'),
+        need(num(input$SE_FRR) >= 0, 'Please provide a valid SE for FRR'),
+        #need(num(input$SE_FRR) <= 100, 'Please provide a valid SE for FRR'),
+        need(!(num(input$SE_FRR) == "" ), 'Please provide a value for SE_FRR'),
+        need(num(input$SE_MDRI) >= 0, 'Please provide a valid SE for MDRI'),
+        #need(num(input$SE_MDRI) <= 100, 'Please provide a valid SE for MDRI'),
+        need(!(num(input$SE_MDRI) == "" ), 'Please provide a value for SE_MDRI'),
+        need(num(input$MDRI) >= 0, 'Please provide a valid value for MDRI'),
+        need(num(input$FRR) >= 0, 'Please provide a valid value for FRR'),
+        need(num(input$FRR) <= 100, 'Please provide a valid value for FRR'),
+        need(num(input$BigT), 'Please provide a value for the cut-off time'),
+        need(num(input$BigT) > 120, 'Please provide a valid value for the cut-off time (>120)'),
         need(input$n_bootstraps >= 10000, "Bootstrapping iterations must be in the range [10,000,500,000]"),
         need(input$n_bootstraps <= 500000, "Bootstrapping iterations must be in the range [10,000,500,000]")
       )
       
-      RSE_MDRI <- input$SE_MDRI / input$MDRI
-      MDRI <- input$MDRI
+      RSE_MDRI <- num(input$SE_MDRI) / num(input$MDRI)
+      MDRI <- num(input$MDRI)
       
-      FRR <- input$FRR / 100
-      RSE_FRR  <- ifelse(input$FRR == 0, 0, input$SE_FRR / input$FRR)
+      FRR <- num(input$FRR) / 100
+      RSE_FRR  <- ifelse(num(input$FRR) == 0, 0, num(input$SE_FRR) / num(input$FRR))
       FRR<- ifelse(FRR==0,0.0000000001,FRR) # cheating
       
       
       if (input$data_type == 1) {
         validate(
-          need(input$PrevH >= 0, 'Please provide a valid value for HIV prevalence'),
-          need(input$PrevH <= 100, 'Please provide a valid HIV prevalence'),
-          need(!(input$PrevH == "" ), 'Please provide a value HIV prevalence'),
-          need(input$SE_PrevH >= 0, 'Please provide a valid SE for HIV prevalence'),
-          #need(input$SE_PrevH <= 10, 'Please provide a valid SE for Hiv prevalence'),
-          need(!(input$SE_PrevH == "" ), 'Please provide a value for SE for HIV prevalence'),
-          need(input$PrevR >= 0, 'Please provide a valid value for recency among HIV prevalence'),
-          need(input$PrevR <= 100, 'Please provide a valid recency among HIV prevalence'),
-          need(!(input$PrevR == "" ), 'Please provide a value recency among HIV prevalence'),
-          need(input$SE_PrevR >= 0, 'Please provide a valid SE for recency of HIV positives'),
-          #need(input$SE_PrevR <= 10, 'Please provide a valid SE for recency of Hiv prevalence'),
-          need(!(input$SE_PrevR == "" ), 'Please provide a value SE for recency of HIV prevalence'),
-          need(!is.na(input$cor_PrevH_PrevR), "Please provide a valid correlation for PrevH and PrevR (default: 0)")
+          need(num(input$PrevH) >= 0, 'Please provide a valid value for HIV prevalence'),
+          need(num(input$PrevH) <= 100, 'Please provide a valid HIV prevalence'),
+          need(!(num(input$PrevH) == "" ), 'Please provide a value HIV prevalence'),
+          need(num(input$SE_PrevH) >= 0, 'Please provide a valid SE for HIV prevalence'),
+          #need(num(input$SE_PrevH) <= 10, 'Please provide a valid SE for Hiv prevalence'),
+          need(!(num(input$SE_PrevH) == "" ), 'Please provide a value for SE for HIV prevalence'),
+          need(num(input$PrevR) >= 0, 'Please provide a valid value for recency among HIV prevalence'),
+          need(num(input$PrevR) <= 100, 'Please provide a valid recency among HIV prevalence'),
+          need(!(num(input$PrevR) == "" ), 'Please provide a value recency among HIV prevalence'),
+          need(num(input$SE_PrevR) >= 0, 'Please provide a valid SE for recency of HIV positives'),
+          #need(num(input$SE_PrevR) <= 10, 'Please provide a valid SE for recency of Hiv prevalence'),
+          need(!(num(input$SE_PrevR) == "" ), 'Please provide a value SE for recency of HIV prevalence'),
+          need(!is.na(num(input$cor_PrevH_PrevR)), "Please provide a valid correlation for PrevH and PrevR (default: 0)")
         )
         
         #browser()
         
-        RSE_Prop_Pos <- input$SE_PrevH / input$PrevH
-        Prop_Pos <- input$PrevH / 100
-        RSE_Prop_R <- input$SE_PrevR / input$PrevR
-        Prop_R <- input$PrevR / 100
+        RSE_Prop_Pos <- num(input$SE_PrevH) / num(input$PrevH)
+        Prop_Pos <- num(input$PrevH) / 100
+        RSE_Prop_R <- num(input$SE_PrevR) / num(input$PrevR)
+        Prop_R <- num(input$PrevR) / 100
         
         temp <- incprops(PrevH = Prop_Pos, 
                          RSE_PrevH = RSE_Prop_Pos,
@@ -86,14 +88,14 @@ shinyServer(function(input, output){
                          RSE_MDRI = RSE_MDRI,
                          FRR = FRR, 
                          RSE_FRR = RSE_FRR,
-                         BigT = input$BigT,
+                         BigT = num(input$BigT),
                          Boot = TRUE,
                          BS_Count = input$n_bootstraps,
-                         cor_HR = input$cor_PrevH_PrevR)
+                         cor_HR = num(input$cor_PrevH_PrevR))
         
         inc_df <- dplyr::data_frame(
-          `Prev (%)` = round(input$PrevH, 3), #  * 100 / 100 cluge to make trailing zeros appear
-          `Prev SE` = round(input$SE_PrevH, 3),
+          `Prev (%)` = round(num(input$PrevH), 3), #  * 100 / 100 cluge to make trailing zeros appear
+          `Prev SE` = round(num(input$SE_PrevH), 3),
           `Inc (%)*` = round(temp$Incidence$Incidence * 100, 3),
           `Inc SE` = round(temp$Incidence$RSE.I * temp$Incidence$Incidence * 100, 3),
           Corr = round(temp$Incidence$Cor.PrevH.I,3)
@@ -103,37 +105,37 @@ shinyServer(function(input, output){
         
       } else if (input$data_type == 2) {
         validate(
-          need(input$N>0,"Please enter a valid total population sample size"),
-          need(input$N>=input$N_H,"HIV-positive subjects should be less than total sample size"),
-          need(input$N_H>=input$N_testR,"HIV-positive subjects tested for recency should be less than or equal to HIV-positive subjects among total sample size"),
-          need(input$N_testR>=input$N_R,"The number of recent HIV cases should be less than or equal to HIV-positive subjects tested for recency"),
-          need(input$DE_H >= 1, "Design effect on HIV prevalence must be >= 1"),
-          need(input$DE_R >= 1, "Design effect on Prop. recent | + must be >= 1")
-          #need(!is.na(input$cor_PrevH_PrevR), "Please provide a valid correlation for PrevH and PrevR (default: 0)")
+          need(num(input$N)>0,"Please enter a valid total population sample size"),
+          need(num(input$N)>=num(input$N_H),"HIV-positive subjects should be less than total sample size"),
+          need(num(input$N_H)>=num(input$N_testR),"HIV-positive subjects tested for recency should be less than or equal to HIV-positive subjects among total sample size"),
+          need(num(input$N_testR)>=num(input$N_R),"The number of recent HIV cases should be less than or equal to HIV-positive subjects tested for recency"),
+          need(num(input$DE_H) >= 1, "Design effect on HIV prevalence must be >= 1"),
+          need(num(input$DE_R) >= 1, "Design effect on Prop. recent | + must be >= 1")
+          #need(!is.na(num(input$cor_PrevH_PrevR)), "Please provide a valid correlation for PrevH and PrevR (default: 0)")
         )
         
-        temp <- inccounts(N = input$N, 
-                          N_H = input$N_H, 
-                          N_testR = input$N_testR, 
-                          N_R = input$N_R, 
-                          DE_H = input$DE_H, 
-                          DE_R = input$DE_R, 
+        temp <- inccounts(N = num(input$N), 
+                          N_H = num(input$N_H), 
+                          N_testR = num(input$N_testR), 
+                          N_R = num(input$N_R), 
+                          DE_H = num(input$DE_H), 
+                          DE_R = num(input$DE_R), 
                           MDRI = MDRI, 
                           RSE_MDRI = RSE_MDRI,
                           FRR = FRR, 
                           RSE_FRR = RSE_FRR,
-                          BigT = input$BigT,
+                          BigT = num(input$BigT),
                           Boot = TRUE,
                           BS_Count = input$n_bootstraps,
                           Covar_HR = 0, 
                           cor_HR = 0)
         
-        temp_prev <- prevcounts(N = input$N, 
-                                N_H = input$N_H, 
-                                N_testR = input$N_testR, 
-                                N_R = input$N_R,
-                                DE_H = input$DE_H, 
-                                DE_R = input$DE_R)
+        temp_prev <- prevcounts(N = num(input$N), 
+                                N_H = num(input$N_H), 
+                                N_testR = num(input$N_testR), 
+                                N_R = num(input$N_R),
+                                DE_H = num(input$DE_H), 
+                                DE_R = num(input$DE_R))
         
         inc_df <- dplyr::data_frame(
           `Prev (%)` = temp_prev$PrevH * 100,
@@ -148,21 +150,21 @@ shinyServer(function(input, output){
       } else if (input$data_type == 3) {
         #browser()
         
-        if (input$N_notT == 0) {
-          prev <- (input$N_Re + input$N_nonR) / (input$N_Re + input$N_nonR + input$N_Neg)
-          prevR <- input$N_Re / (input$N_Re + input$N_nonR)
+        if (num(input$N_notT) == 0) {
+          prev <- (num(input$N_Re) + num(input$N_nonR)) / (num(input$N_Re) + num(input$N_nonR) + num(input$N_Neg))
+          prevR <- num(input$N_Re) / (num(input$N_Re) + num(input$N_nonR))
           
           
           vcovmat <- matrix(nrow=3,ncol = 3)
-          vcovmat[1,1] <- input$Var_N_R
-          vcovmat[2,2] <- input$Var_N_nonR
-          vcovmat[3,3] <- input$Var_N_Neg
-          vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NR
-          vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_Neg
-          vcovmat[3,2] <- vcovmat[2,3] <- input$Cov_NR_Neg
+          vcovmat[1,1] <- num(input$Var_N_R)
+          vcovmat[2,2] <- num(input$Var_N_nonR)
+          vcovmat[3,3] <- num(input$Var_N_Neg)
+          vcovmat[2,1] <- vcovmat[1,2] <- num(input$Cov_R_NR)
+          vcovmat[3,1] <- vcovmat[1,3] <- num(input$Cov_R_Neg)
+          vcovmat[3,2] <- vcovmat[2,3] <- num(input$Cov_NR_Neg)
           
-          vars <- cbind(c(input$N_Neg, input$N_Neg, - (input$N_Re + input$N_nonR)) / (input$N_Re + input$N_nonR + input$N_Neg)^2,
-                        c(input$N_nonR, -input$N_Re, 0) / (input$N_Re + input$N_nonR)^2)
+          vars <- cbind(c(num(input$N_Neg), num(input$N_Neg), - (num(input$N_Re) + num(input$N_nonR))) / (num(input$N_Re) + num(input$N_nonR) + num(input$N_Neg))^2,
+                        c(num(input$N_nonR), -num(input$N_Re), 0) / (num(input$N_Re) + num(input$N_nonR))^2)
           
           propvars <- t(vars) %*% vcovmat %*% vars
           
@@ -178,7 +180,7 @@ shinyServer(function(input, output){
                            RSE_MDRI = RSE_MDRI,
                            FRR = FRR, 
                            RSE_FRR = RSE_FRR,
-                           BigT = input$BigT,
+                           BigT = num(input$BigT),
                            Boot = TRUE,
                            BS_Count = input$n_bootstraps,
                            cor_HR = corr)
@@ -192,26 +194,26 @@ shinyServer(function(input, output){
           )
           return(inc_df)
           
-        } else if (input$N_notT > 0) {
+        } else if (num(input$N_notT) > 0) {
           
-          prev <- (input$N_Re + input$N_nonR + input$N_notT) / (input$N_Re + input$N_nonR + input$N_notT + input$N_Neg)
-          prevR <- input$N_Re / (input$N_Re + input$N_nonR)
+          prev <- (num(input$N_Re) + num(input$N_nonR) + num(input$N_notT)) / (num(input$N_Re) + num(input$N_nonR) + num(input$N_notT) + num(input$N_Neg))
+          prevR <- num(input$N_Re) / (num(input$N_Re) + num(input$N_nonR))
           
           
           vcovmat <- matrix(nrow=4,ncol = 4)
-          vcovmat[1,1] <- input$Var_N_R
-          vcovmat[2,2] <- input$Var_N_nonR
-          vcovmat[3,3] <- input$Var_N_notT
-          vcovmat[4,4] <- input$Var_N_Neg
-          vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NR
-          vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_notT
-          vcovmat[4,1] <- vcovmat[1,4] <- input$Cov_R_Neg
-          vcovmat[2,3] <- vcovmat[3,2] <- input$Cov_NR_notT
-          vcovmat[3,4] <- vcovmat[4,3] <- input$Cov_NotT_Neg
-          vcovmat[4,2] <- vcovmat[2,4] <- input$Cov_NR_Neg
+          vcovmat[1,1] <- num(input$Var_N_R)
+          vcovmat[2,2] <- num(input$Var_N_nonR)
+          vcovmat[3,3] <- num(input$Var_N_notT)
+          vcovmat[4,4] <- num(input$Var_N_Neg)
+          vcovmat[2,1] <- vcovmat[1,2] <- num(input$Cov_R_NR)
+          vcovmat[3,1] <- vcovmat[1,3] <- num(input$Cov_R_notT)
+          vcovmat[4,1] <- vcovmat[1,4] <- num(input$Cov_R_Neg)
+          vcovmat[2,3] <- vcovmat[3,2] <- num(input$Cov_NR_notT)
+          vcovmat[3,4] <- vcovmat[4,3] <- num(input$Cov_NotT_Neg)
+          vcovmat[4,2] <- vcovmat[2,4] <- num(input$Cov_NR_Neg)
           
-          vars <- cbind(c(input$N_Neg, input$N_Neg, input$N_Neg, -(input$N_Re + input$N_nonR + input$N_notT)) / (input$N_Re + input$N_nonR + input$N_notT + input$N_Neg)^2,
-                        c(input$N_nonR, -input$N_Re, 0, 0) / (input$N_Re + input$N_nonR)^2)
+          vars <- cbind(c(num(input$N_Neg), num(input$N_Neg), num(input$N_Neg), -(num(input$N_Re) + num(input$N_nonR) + num(input$N_notT))) / (num(input$N_Re) + num(input$N_nonR) + num(input$N_notT) + num(input$N_Neg))^2,
+                        c(num(input$N_nonR), -num(input$N_Re), 0, 0) / (num(input$N_Re) + num(input$N_nonR))^2)
           
           propvars <- t(vars) %*% vcovmat %*% vars
           
@@ -227,7 +229,7 @@ shinyServer(function(input, output){
                            RSE_MDRI = RSE_MDRI,
                            FRR = FRR, 
                            RSE_FRR = RSE_FRR,
-                           BigT = input$BigT,
+                           BigT = num(input$BigT),
                            Boot = TRUE,
                            BS_Count = input$n_bootstraps,
                            cor_HR = corr)
@@ -244,24 +246,24 @@ shinyServer(function(input, output){
         
         
       } else if (input$data_type == 4) {
-        prev <- sum(input$P_Re, input$P_nonR, input$P_notT)
-        prevR <- input$P_Re / sum(input$P_Re, input$P_nonR)
+        prev <- sum(num(input$P_Re), num(input$P_nonR), num(input$P_notT))
+        prevR <- num(input$P_Re) / sum(num(input$P_Re), num(input$P_nonR))
         
         
         vcovmat <- matrix(nrow=4,ncol = 4)
-        vcovmat[1,1] <- input$Var_P_R
-        vcovmat[2,2] <- input$Var_P_nonR
-        vcovmat[3,3] <- input$Var_P_notT
-        vcovmat[4,4] <- input$Var_P_Neg
-        vcovmat[2,1] <- vcovmat[1,2] <- input$Cov_R_NRp
-        vcovmat[3,1] <- vcovmat[1,3] <- input$Cov_R_notTp
-        vcovmat[4,1] <- vcovmat[1,4] <- input$Cov_R_Negp
-        vcovmat[2,3] <- vcovmat[3,2] <- input$Cov_NR_notTp
-        vcovmat[3,4] <- vcovmat[4,3] <- input$Cov_NotT_Negp
-        vcovmat[4,2] <- vcovmat[2,4] <- input$Cov_NR_Negp
+        vcovmat[1,1] <- num(input$Var_P_R)
+        vcovmat[2,2] <- num(input$Var_P_nonR)
+        vcovmat[3,3] <- num(input$Var_P_notT)
+        vcovmat[4,4] <- num(input$Var_P_Neg)
+        vcovmat[2,1] <- vcovmat[1,2] <- num(input$Cov_R_NRp)
+        vcovmat[3,1] <- vcovmat[1,3] <- num(input$Cov_R_notTp)
+        vcovmat[4,1] <- vcovmat[1,4] <- num(input$Cov_R_Negp)
+        vcovmat[2,3] <- vcovmat[3,2] <- num(input$Cov_NR_notTp)
+        vcovmat[3,4] <- vcovmat[4,3] <- num(input$Cov_NotT_Negp)
+        vcovmat[4,2] <- vcovmat[2,4] <- num(input$Cov_NR_Negp)
         
         vars <- cbind(c(1, 1, 1, 0),
-                      c(input$P_nonR, -input$P_Re, 0, 0) / sum(input$P_Re, input$P_nonR)^2)
+                      c(num(input$P_nonR), -num(input$P_Re), 0, 0) / sum(num(input$P_Re), num(input$P_nonR))^2)
         
         propvars <- t(vars) %*% vcovmat %*% vars
         
@@ -277,7 +279,7 @@ shinyServer(function(input, output){
                          RSE_MDRI = RSE_MDRI,
                          FRR = FRR, 
                          RSE_FRR = RSE_FRR,
-                         BigT = input$BigT,
+                         BigT = num(input$BigT),
                          Boot = TRUE,
                          BS_Count = input$n_bootstraps,
                          cor_HR = corr)
@@ -293,19 +295,19 @@ shinyServer(function(input, output){
         
       } else if (input$data_type == 5) {
         
-        prev <- input$PrevH/100 
-        prev_se <- input$SE_PrevH/100
-        inc <- input$Inc/100
-        inc_se <- input$SE_Inc/100
+        prev <- num(input$PrevH)/100 
+        prev_se <- num(input$SE_PrevH)/100
+        inc <- num(input$Inc)/100
+        inc_se <- num(input$SE_Inc)/100
         
         
         
         
         inc_df <- dplyr::data_frame(
-          `Prev (%)` = round(input$PrevH,3),
-          `Prev SE` = input$SE_PrevH,
-          `Inc (%)*` = input$Inc,
-          `Inc SE` = input$SE_Inc,
+          `Prev (%)` = round(num(input$PrevH),3),
+          `Prev SE` = num(input$SE_PrevH),
+          `Inc (%)*` = num(input$Inc),
+          `Inc SE` = num(input$SE_Inc),
           Corr = inc / ((1-prev)*prev) * prev_se / inc_se
         )
         
