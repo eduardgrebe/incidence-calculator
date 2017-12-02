@@ -22,35 +22,35 @@ shinyServer(function(input, output){
   incidence_calc <- reactive({
     #browser()
     
-    RSE_MDRI <- input$SE_MDRI / input$MDRI
-    MDRI <- input$MDRI
+    RSE_MDRI <- as.numeric(input$SE_MDRI) / as.numeric(input$MDRI)
+    MDRI <- as.numeric(input$MDRI)
     
-    FRR <- input$FRR / 100
-    RSE_FRR  <- ifelse(input$FRR == 0, 0, input$SE_FRR / input$FRR)
+    FRR <- as.numeric(input$FRR) / 100
+    RSE_FRR  <- ifelse(as.numeric(input$FRR) == 0, 0, as.numeric(input$SE_FRR) / as.numeric(input$FRR))
     FRR<- ifelse(FRR==0,0.0000000001,FRR) # cheating
     
     if (input$single_multiple == 1) {
       validate(
-        need(input$SE_FRR >= 0, 'Please provide a valid SE for FRR'),
-        #need(input$SE_FRR <= 100, 'Please provide a valid SE for FRR'),
-        need(!(input$SE_FRR == "" ), 'Please provide a value for SE_FRR'),
-        need(input$SE_MDRI >= 0, 'Please provide a valid SE for MDRI'),
-        #need(input$SE_MDRI <= 100, 'Please provide a valid SE for MDRI'),
-        need(!(input$SE_MDRI == "" ), 'Please provide a value for SE_MDRI'),
-        need(input$MDRI >= 0, 'Please provide a valid value for MDRI'),
-        need(input$FRR >= 0, 'Please provide a valid value for FRR'),
-        need(input$FRR <= 100, 'Please provide a valid value for FRR'),
-        need(input$BigT, 'Please provide a value for the cut-off time'),
-        need(input$BigT > 120, 'Please provide a valid value for the cut-off time (>120)'),
+        need(as.numeric(input$SE_FRR) >= 0, 'Please provide a valid SE for FRR'),
+        #need(as.numeric(input$SE_FRR) <= 100, 'Please provide a valid SE for FRR'),
+        need(!(as.numeric(input$SE_FRR) == "" ), 'Please provide a value for SE_FRR'),
+        need(as.numeric(input$SE_MDRI) >= 0, 'Please provide a valid SE for MDRI'),
+        #need(as.numeric(input$SE_MDRI) <= 100, 'Please provide a valid SE for MDRI'),
+        need(!(as.numeric(input$SE_MDRI) == "" ), 'Please provide a value for SE_MDRI'),
+        need(as.numeric(input$MDRI) >= 0, 'Please provide a valid value for MDRI'),
+        need(as.numeric(input$FRR) >= 0, 'Please provide a valid value for FRR'),
+        need(as.numeric(input$FRR) <= 100, 'Please provide a valid value for FRR'),
+        need(as.numeric(input$BigT), 'Please provide a value for the cut-off time'),
+        need(as.numeric(input$BigT) > 120, 'Please provide a valid value for the cut-off time (>120)'),
         need(input$n_bootstraps >= 10000, "Bootstrapping iterations must be in the range [10,000,500,000]"),
         need(input$n_bootstraps <= 500000, "Bootstrapping iterations must be in the range [10,000,500,000]")
       )
       
-      RSE_MDRI <- input$SE_MDRI / input$MDRI
-      MDRI <- input$MDRI
+      RSE_MDRI <- as.numeric(input$SE_MDRI) / as.numeric(input$MDRI)
+      MDRI <- as.numeric(input$MDRI)
       
-      FRR <- input$FRR / 100
-      RSE_FRR  <- ifelse(input$FRR == 0, 0, input$SE_FRR / input$FRR)
+      FRR <- as.numeric(input$FRR) / 100
+      RSE_FRR  <- ifelse(as.numeric(input$FRR) == 0, 0, as.numeric(input$SE_FRR) / as.numeric(input$FRR))
       FRR<- ifelse(FRR==0,0.0000000001,FRR) # cheating
       
       
@@ -86,7 +86,7 @@ shinyServer(function(input, output){
                          RSE_MDRI = RSE_MDRI,
                          FRR = FRR, 
                          RSE_FRR = RSE_FRR,
-                         BigT = input$BigT,
+                         BigT = as.numeric(input$BigT),
                          Boot = TRUE,
                          BS_Count = input$n_bootstraps,
                          cor_HR = input$cor_PrevH_PrevR)
@@ -122,7 +122,7 @@ shinyServer(function(input, output){
                           RSE_MDRI = RSE_MDRI,
                           FRR = FRR, 
                           RSE_FRR = RSE_FRR,
-                          BigT = input$BigT,
+                          BigT = as.numeric(input$BigT),
                           Boot = TRUE,
                           BS_Count = input$n_bootstraps,
                           Covar_HR = 0, 
@@ -178,7 +178,7 @@ shinyServer(function(input, output){
                            RSE_MDRI = RSE_MDRI,
                            FRR = FRR, 
                            RSE_FRR = RSE_FRR,
-                           BigT = input$BigT,
+                           BigT = as.numeric(input$BigT),
                            Boot = TRUE,
                            BS_Count = input$n_bootstraps,
                            cor_HR = corr)
@@ -227,7 +227,7 @@ shinyServer(function(input, output){
                            RSE_MDRI = RSE_MDRI,
                            FRR = FRR, 
                            RSE_FRR = RSE_FRR,
-                           BigT = input$BigT,
+                           BigT = as.numeric(input$BigT),
                            Boot = TRUE,
                            BS_Count = input$n_bootstraps,
                            cor_HR = corr)
@@ -277,7 +277,7 @@ shinyServer(function(input, output){
                          RSE_MDRI = RSE_MDRI,
                          FRR = FRR, 
                          RSE_FRR = RSE_FRR,
-                         BigT = input$BigT,
+                         BigT = as.numeric(input$BigT),
                          Boot = TRUE,
                          BS_Count = input$n_bootstraps,
                          cor_HR = corr)
