@@ -197,24 +197,19 @@ shinyServer(function(input, output){
         return(inc_df)
         
       } else if (input$data_type == 4) {
-        prev <- sum(num(input$P_Re), num(input$P_nonR), num(input$P_notT))
-        prevR <- num(input$P_Re) / sum(num(input$P_Re), num(input$P_nonR))
+        prev <- num(input$P_Re)+num(input$P_nonR)+num(input$P_notT)
+        prevR <- num(input$P_Re) / (num(input$P_Re) + num(input$P_nonR))
         
-        
-        vcovmat <- matrix(nrow=4,ncol = 4)
+        vcovmat <- matrix(nrow=3, ncol = 3)
         vcovmat[1,1] <- num(input$Var_P_R)
         vcovmat[2,2] <- num(input$Var_P_nonR)
         vcovmat[3,3] <- num(input$Var_P_notT)
-        vcovmat[4,4] <- num(input$Var_P_Neg)
         vcovmat[2,1] <- vcovmat[1,2] <- num(input$Cov_R_NRp)
         vcovmat[3,1] <- vcovmat[1,3] <- num(input$Cov_R_notTp)
-        vcovmat[4,1] <- vcovmat[1,4] <- num(input$Cov_R_Negp)
         vcovmat[2,3] <- vcovmat[3,2] <- num(input$Cov_NR_notTp)
-        vcovmat[3,4] <- vcovmat[4,3] <- num(input$Cov_NotT_Negp)
-        vcovmat[4,2] <- vcovmat[2,4] <- num(input$Cov_NR_Negp)
         
-        vars <- cbind(c(1, 1, 1, 0),
-                      c(num(input$P_nonR), -num(input$P_Re), 0, 0) / sum(num(input$P_Re), num(input$P_nonR))^2)
+        vars <- cbind(c(1, 1, 1),
+                      c(num(input$P_nonR), -num(input$P_Re), 0) / (num(input$P_Re) + num(input$P_nonR))^2)
         
         propvars <- t(vars) %*% vcovmat %*% vars
         
@@ -251,9 +246,6 @@ shinyServer(function(input, output){
         inc <- num(input$Inc)/100
         inc_se <- num(input$SE_Inc)/100
         
-        
-        
-        
         inc_df <- dplyr::data_frame(
           `Prev (%)` = round(num(input$PrevH),3),
           `Prev SE` = num(input$SE_PrevH),
@@ -263,11 +255,7 @@ shinyServer(function(input, output){
         )
         
         return(inc_df)
-        
-        
       }
-      
-      
       
     }
   }) 
