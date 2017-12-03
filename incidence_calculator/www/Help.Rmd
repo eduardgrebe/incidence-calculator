@@ -12,56 +12,70 @@ A cross sectional survey leads to a core dataset with typical (germaine to the p
 * HIV status (-/+)
 * Recency Status (Non-recent/Recent)
 
-This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types, and there are standard R packages (like *survey*) which can do this. For the present application, the data should be reduced, by whatever means available to the user, to
+This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types, and there are standard R packages (like *survey*) which can do this. For the present application, which combines prevalence estimation with cross sectional incidence estimation based on markers of 'recent infection', the raw survey data can ultimately to be reduced, without loss of information, to
 
 *	an estimate of HIV prevalence
 *	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
-*	A variance/covariance matrix for these two prevalence estimates
+*	A variance/covariance matrix for these two 'prevalence' estimates (bearing in mind they have different denominators, which leads to some nuances in the calculation of the covariance)
 
-While the calculator has no particular requirements or expectations about how these estimates are to be obtained, they need to be provided in the specified format, either by hand into the interface (one survey per transaction of the calculator), or by uploading a file (which makes it possible to provide estimates from multiple surveys in one transaction of the calculator). This choice is made in the top horizontal box of the *Estimate Incidence* tab. Depending on the choice, the page adapts to handle the estimates accordingly. Either way, by using primarily the *inctools* function `incprops`, the calculator will report:
-
-* the (user provided) HIV Prevalence (point estimate and standard error)
-* an incidence point estimate and standard error
-* the equivalent annualised risk of infection (which is usually numerically very similar)
-* the correlation/covariance of HIV Prevalence and Incidence (including an approximate CI ?? REALLY ??)
-* implied confidence intervals on MDRI and FRR derived from input parameters provided as PEs and RSEs)
+We refer to this survey summary as the (fundamental) 'two prevalences' form. It is the smallest set of summary indicators that has no information loss relevant to the calculation of prevalence, incidence and their correlation.
 
 
-### Entering Survey Results in the Form
+## Entering Survey Summary Estimates  
 
-Having chosen to enter survey estimates "via a form", there is a further choice, to be made in the *Data type* box, namely whether to supply *estimated prevalences* or *sample counts*.
+At a high level, the user decides to enter the survey data summary either by hand into the interface (one survey per transaction of the calculator), or by uploading a file (which makes it possible to provide estimates from multiple surveys in one transaction of the calculator).
+This choice is made in the top horizontal box of the *Estimate Incidence* tab. File based entry is currently implemented only for the fundamental 'two prevalences' (of HIV, and of Recent Infection among HIV Positives) form.
+
+Depending on the form/file choice, the page adapts to handle the transaction accordingly.
+If form based entry is selected, there is a further choice of five alternative estimate formats (explained in more detail below) of which the 'two prevalences' form is just one. Depending on the data format choice that has been made, the form further adapts to provide the appropriately labelled spaces to insert survey summaries of the chosen format.
+
+However survey data is entered, once the relevant internal transformations have been done, the calculator will primarily use the *inctools* function `incprops`, to report:
+
+* the (user provided) HIV Prevalence point estimate (as a percentage)
+* the (absolute) standarderror of the prevalence estimate (in percentage points)
+* an incidence point estimate (as a rate, expressed in percent infection risk per annum)
+* the correlation between the HIV Prevalence and Incidence estimates (a value between -1 and 1)
+
+The formats available within browser form based entry are:
+
+* *Raw survey counts* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', without regard to sample designs, weights, etc. Entering simple survey counts makes it possible to obtain a preliminary estimate while one has not fully resolved all issues with analysis accounting for sampling structure. This framing also provides a useful heuristic of conceiving the data as reflecting two successive (and in this limit, uncorrelated) experiments with binomially distributed outcomes:
+
+** The estimation of the prevalence of HIV, and
+** the estimation of the prevalence of recent infection amongst HIV positives.
+
+Note the explicit specification of number of completed recent infection ascertainments, to allow for incomplete coverage. Variances are inferred from the binomial distribution. Design effects can be entered (if one has a reasonable estimation of what these might be) to avoid being locked in to an overly optimistic incidence estimate variance.
+* *Prevalences*: of HIV, and of Recent Infection *amongst HIV positives* (plus explicitly specified variances and a correlation). This, noted above to be the most fundamental reduction of a survey data set, also has the simplest relation to the unstructured analysis in terms of raw survey counts. It is equivalence to providing, in addition to raw counts, the 'correctly' calculated design effects, and a correlation. (Incidentally, we expect the correlation of HIV prevalence and Prevalence of recent infection amongst HIV positives to be small in almost all cases)
+* *Population Level Proportions* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', and HIV Negatives - each normalised to the total population, rather than reporting the estimated proportion of recent infections directly as a proportion of all HIV positive cases as in the previous format. This also requires an appropriately generated full variance/covariance matrix between all four of these proportions, which is then used by the calculator to produce the net estimates of the preceding 'two prevalences' format.
+* *Population Level Totals* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', which are often naturally produced from analysis of data equipped with population weights. This is effectively equivalent to the population level proportions, which are simply normalised to the total population size.
+* *Prevalence and incidence estimates* that were previously produced from underlying survey data that is not currently to hand. The calculator adds the (noted above to be usually benign) assumption that the estimates of prevalence of HIV and of recent infection amongst HIV positives are uncorrelated, and then returns the prevalence/incidence correlation as its key output for use with Spectrum/EPP.
+
+
+
+### Using the Browser Form
+
+Each version of the form is preloaded with defaults which demonstrate alternative processing of a single simulated data set, available {here} (??)
+
+
+
 
 
 #### Entering Raw Sample Counts
 
-This option would hopefully be used merely to provide a preliminary analysis.
-
-By *counts* we here mean providing, in the *Survey Data* box, raw survey counts of
-
-* subjects tested for HIV
-* positive results
-* recency ascertainments (on a completely random subset of positives)
-* 'recent' results
-
-*Design Effects* can optionally be provided if there is some rational basis for choosing particular values. The defaults (values of one) mean the data will be interpreted as two binomial experiments - one to estimate prevalence, and an independent experiment to estimate prevalence of recent infection amongst HIV + subjects.
-The preloaded sample counts are:
+The raw survey counts in the simulated data set are
 
 * 5000 subjects tested for HIV
 * 1000 positive results (an unweighted HIV prevalence of 20%, estimated with a standard error of 0.56%)
 * 900 recency ascertainments on a completely random 900 of the 1000 positives, leading to 45 'recent' (and hence 855 'non recent') results, for a prevalence of recent infection, amongst HIV positives, of 10%, with a relative standard error of 9%
 
+
+*Design Effects* default to one, not because it is likely that naive binomial accounting produces the most faithful estimates and variances, but because it is not clear how to propose a meaningful generic value other than one.
+
 It is worth changing the recency results to be based on 1000 ascertainments (i.e. 100% coverage) and the number of 'recent' results to 50, thus preserving the estimated prevalence of recency amongst positives, and hence the incidence point estimate. Note the slight improvement in precision this produces in the incidenc estimate.
 
 
-#### Entering Prevalences Estimated with Sampling Complexities Accounted
+#### Entering the Fundamental 'Two Prevalences', Estimated with Sampling Complexities Accounted
 
-Using the same underlying data set that generated the counts just used above, one should ideally take account of sampling complexities and directly obtain (for example by using the R package *survey*)
-*	an estimate of HIV prevalence
-*	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
-*	A variance/covariance matrix for these two prevalence estimates
-which can be entered into the *Survey Data* box when choosing the *Data Type* as *estimated prevalences*
-
-This is preloaded with:
+Using the same underlying data set that generated the counts just used above, one would ideally take account of sampling complexities and directly obtain (for example by using the R package *survey*)
 *	an estimated HIV prevalence of 20% with a standard error of 1 percentage point
 *	an estimated prevalence of ‘recent infection’ amongst those who are HIV positive, of 5%, with a standard error of 1 percentage point
 *	a correlation of 0.1 for these two prevalence estimates
@@ -69,10 +83,44 @@ This is preloaded with:
 Note the increased standard error, though same point estimate of incidence relative to the calculation based on raw survey counts. This is largely due to increased standard errors in the prevalences, but is also slightly responsive to the reported correlation between the prevalences, which has no analog in the raw counts case.
 
 
+#### Entering a complete set of estimated population level proportions
+
+This approach essentially assumes that there is some innate probability of a recency test actually be completed for any given HIV positive subject, although technically, there is no need to estimate such a proability if missingness is completely random. The transformation to the fundamental two prevalences, starting with these fully (formally *over-*) specified sample proportions consequently involves a large number of variances and covariances. Applying a routine structured survey analysis to the simulated data leads to proportions of
+
+*	0.02 who test non recently HIV infected
+*	() who test recently infected
+* XX who test HIV positive but get no recency status ascertainment
+*	XX who test HIV negative
+
+and a total of 4 variances 6 covariances.
+
+
+#### Entering final estimated population counts
+
+By using the weights in the simulated data set, the following population totals (plus 4 variances and 6 covariances) are estimated:
+
+* NN who test non recently HIV infected
+*	NN who test recently infected
+* NN who test HIV positive but get no recency status ascertainment
+*	NN who test HIV negative
+
+which captures the idea that if the whole population were surveyed and at least tested for HIV, then there would be some expected number of individuals who would test positive but not get a recency result.
+
+
+#### Entering a previously calculated Prevalences and Incidence Estimate, without reanalysing the underlying data set
+
+For this example, the defaults are chosen to reflect the prevalence and incidence obtained in the previous formats:
+
+* Prevalence of () %, estimated with a standard error of () percentage points
+* Incidence of () percent per annum, estimated with a standard error of () % per annum.
+
+This form of the calculator is intended for instances where the complete underlying data behind these estimates is not available for analysis of covariance. The calculator explicitly assumes that the correlation between HIV prevalence and and the prevalence of recency amongst positives is 0, and, based on that, and the assumption that this prevalence and incidence were obtained within the Kassanjee paradigm, calculates the correlation between incidence and prevalence.
+
+
 
 #### Providing Recency Test Properties
 
-Whether working with raw survey counts or preprocessed prevalence estimates, the form based (not file based) version of the *Calculate Incidence* tab provides a "Recency Test" box for entering the test performance defining parameters. These are preloaded to reflect a recency test with:
+When working with any of the data formats of the browser-form based data entry, the *Calculate Incidence* tab provides a "Recency Test" box for entering the recency-test-performance-defining parameters. These are preloaded to reflect a recency test with:
 
 * an MDRI of 180 days, estimated with a standard error of 10 days
 * an FRR of 0.5%, estimated with a standard error of 0.1 percentage points
@@ -83,10 +131,9 @@ It is interesting to explore how rapidly precision deteriorates as one increases
 
 
 
-
 ### Entering Survey Results Via a File
 
-If one chooses to enter survey estimates "via a file", data from multiple surveys can be analysed in a single calculator transaction, by uploading a CSV file with exactly these columns:
+If one chooses to enter survey estimates "via a file", data from multiple surveys can be analysed in a single calculator transaction, by uploading a CSV file with exactly the following columns, provided as comma separated labels in the first row of the file:
 
 * Year
 * Prevalence_percent
@@ -102,16 +149,22 @@ If one chooses to enter survey estimates "via a file", data from multiple survey
 
 Note that
 
-* the *upload from file* option does not provide a raw survey counts implementation, and
+* as pointed out above, the *upload from file* option requires the fundamental 'two prevelances' format for survey data summary i.e. it does not provide the alternative data formats available in the form based input, and
 * the recent infection test properties need to be specified for each row (each survey estimate summary)
 
 An example file can be [downloaded here](example_survey_input.csv), saved to the users storage, and then uploaded into the calculator.
 
-Both the uploaded file and the resulting incidence estiamtes are displayed on the screen, and the results can be downloaded as a CSV file.
+Both the uploaded file and the resulting incidence estimates will be displayed on the screen, and the results can be downloaded as a CSV file.
+
+
+
+
 
 
 
 
 ### Specifying Number of Bootstrap Iterations
 
-For all calculations, the uncertainty analysis is handled by boostrapping prevalence estimates (of HIV and of recent infection amongst HIV positives) and test property estimates from the estimated gaussian distributions implied by the input parameters supplied. This leads to a more faithful handling of the non linearities in the functional form of the Kassanjee estimator than would be produced by a delta method approach, but naturally does not address any deviations from normality in teh prevalence estimation process - which is expected to be a minor point. The proposed value of 100,000 iterations preloaded into the form leads to high reproducibility of the uncertainty estimates and no significant delays while refreshing the calculator results when inputs are changed. It is worth triggering a refresh of the calculation by changing any parameter back and forth between two values and checking the reproducibility of the standard error estimates, and the prevalence/incidence correlation estimate.
+For all calculations, the uncertainty analysis is handled by boostrapping prevalence estimates (of HIV and of recent infection amongst HIV positives) and test property estimates from the estimated gaussian distributions implied by the input parameters supplied. This leads to a more faithful handling of the non linearities in the functional form of the Kassanjee estimator than would be produced by a delta method approach, but naturally does not address any deviations from normality assumed in the prevalence estimation process - which is expected to be a minor point.
+
+The proposed value of 100,000 iterations preloaded into the form leads to high reproducibility of the uncertainty estimates and no significant delays while refreshing the calculator results when inputs are changed. It is worth triggering a refresh of the calculation by changing any parameter back and forth between two values, checking the reproducibility of the standard error estimates, and the prevalence/incidence correlation estimate, and possibly adjusting the number of bootstrap iterations.

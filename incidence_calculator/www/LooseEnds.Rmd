@@ -14,3 +14,7 @@ The example data set provided is here @URL@. It has the specific column names co
 ## Citation
 
 @The App@, and this supporting documentation, extensively use/recycle material from the R package *inctools*, in line with, and hence further under the aegis of a creative commons licence. This in turn implies the use of the methodology derived in: Kassanjee R, McWalter TA, Bärnighausen T, Welte A. A new general biomarker-based incidence estimator. Epidemiology. 2012; 23(5): 721-728. Some features implemented in *inctools* are currently not published outside the package contents, including technical details documented in the package vignettes, partially recycled here.
+
+
+
+and, in a separate box, the implied confidence intervals on MDRI and FRR derived from input parameters provided as PEs and RSEs
