@@ -23,9 +23,9 @@ fluidPage(
                            column(12,
                                   wellPanel(
                                         #h3("Prevalence estimate format"),
-                                    radioButtons("single_multiple", label = h3("Enter HIV Prevalence and Proportion Recent:"),
-                                                 c("via a form (one survey at a time)" = 1,
-                                                   "via a file (one or more surveys)" = 2
+                                    radioButtons("single_multiple", label = h3("Enter survey data about HIV stautus and recency:"),
+                                                 c("via a form (one population at a time)" = 1,
+                                                   "via a file (multiple populations/surveys)" = 2
                                                    ),
                                                  selected = 1)
                                   )
@@ -39,11 +39,11 @@ fluidPage(
                                     column(3,
                                            wellPanel(
                                              radioButtons("data_type", label = h3("Data Type:"),
-                                                          c("Sample Counts" = 2,
-                                                            "Estimated Prevalences" = 1,
-                                                            "Estimated population totals" = 3,
-                                                            "Estimated population proportions" = 4,
-                                                            "Estimated Prevalence and Incidence" = 5
+                                                          c("Prevalence and proportion recent" = 1,
+                                                            "Population proportions" = 4,
+                                                            "Population totals" = 3,
+                                                            "Raw sample counts" = 2,
+                                                            "Prevalence and Incidence" = 5
                                                             ),
                                                           selected = 1)
                                            ),
@@ -53,13 +53,13 @@ fluidPage(
                                                        label = h5("MDRI (days):"),
                                                        value = 180),
                                              textInput("SE_MDRI",
-                                                       label = h5("SE on MDRI:"),
+                                                       label = h5("SE of MDRI:"),
                                                        value = 18),
                                              textInput("FRR",
                                                        label = h5("False-Recent Rate (%):"),
                                                        value = 0.5),
                                              textInput("SE_FRR",
-                                                       label = h5("SE on FRR (percentage points):"),
+                                                       label = h5("SE of FRR (percentage points):"),
                                                        value = 0.125),
                                              textInput("BigT",
                                                        label = h5("Time Cutoff T (days):"),
@@ -81,13 +81,13 @@ fluidPage(
                                                          label = h5("Prevalence (%):"),
                                                          value = 20),
                                                textInput("SE_PrevH",
-                                                         label = h5("SE on Prevalence (percentage points):"),
+                                                         label = h5("SE of Prevalence (percentage points):"),
                                                          value = 0.7),
                                                textInput("PrevR",
                                                          label = h5("Prevalence of Recency amongst HIV+ (%):"),
                                                          value = 5),
                                                textInput("SE_PrevR",
-                                                         label = h5("SE on Prev. Recency (percentage points):"),
+                                                         label = h5("SE of Prev. Recency (percentage points):"),
                                                          value = 0.9),
                                                textInput("cor_PrevH_PrevR",
                                                          label = h5("Corr (Prev., Prop. Recent):"),
@@ -97,7 +97,7 @@ fluidPage(
                                            conditionalPanel(
                                              condition = "input.data_type == 2",
                                              wellPanel(
-                                               h3("Sample Counts"),
+                                               h3("Raw Sample Counts"),
                                         # em("Assumptions:"),
                                         # em(tags$ul(
                                         #   tags$li("Non-SRS, DEs calculated"),
@@ -132,21 +132,21 @@ fluidPage(
                                              condition = "input.data_type == 3",
                                              wellPanel(
                                                h3("Population Totals"),
-                                               em("If all positives were tested for recency, set N not tested to 0."),
+                                               em("If all positives were tested for recency, input 'N HIV+ and not tested' to 0."),
                                         # em(tags$ul(
                                         #   tags$li("Non-SRS, DEs calculated"),
                                         #   tags$li("Corr prevalence and prop.recent estimated")
                                         # )),
                                                h4("Totals:"),
                                                textInput("N_Re",
-                                                         label = h5("N Recent:"),
+                                                         label = h5("N HIV+ and Recent:"),
                                                          value = 31.331),
 
                                                textInput("N_nonR",
-                                                         label = h5("N Not Recent:"),
+                                                         label = h5("N HIV+ and Not Recent:"),
                                                          value = 954.639),
                                                textInput("N_notT",
-                                                         label = h5("N Not Tested for Recency:"),
+                                                         label = h5("N HIV+ and Not Tested for Recency:"),
                                                          value = 110.514),
 
                                                textInput("N_Neg",
@@ -191,13 +191,13 @@ fluidPage(
                                                h3("Population Proportions"),
 
                                                textInput("P_Re",
-                                                         label = h5("Proportion Recent:"),
+                                                         label = h5("Proportion HIV+ and Recent:"),
                                                          value = 0.0026109),
                                                textInput("P_nonR",
-                                                         label = h5("Proportion Not Recent:"),
+                                                         label = h5("Proportion HIV+ and Not Recent:"),
                                                          value = 0.0795532),
                                                textInput("P_notT",
-                                                         label = h5("Proportion Not Tested for Recency:"),
+                                                         label = h5("Proportion HIV+ and Not Tested for Recency:"),
                                                          value = 0.0092095),
                                                textInput("P_Neg",
                                                          label = h5("Proportion HIV Negative:"),
@@ -213,7 +213,7 @@ fluidPage(
                                                          label = h5("Var(Prop. Not Tested):"),
                                                          value = 8.074968e-07),
                                                textInput("Var_P_Neg",
-                                                         label = h5("Var(N HIV Negative):"),
+                                                         label = h5("Var(Prop. HIV Negative):"),
                                                          value = 1.179336e-05),
                                                textInput("Cov_R_NRp",
                                                          label = h5("Cov(Prop. Recent, Prop. Not Recent):"),
@@ -244,23 +244,15 @@ fluidPage(
                                                          label = h5("Prevalence (%):"),
                                                          value = 20),
                                                textInput("SE_PrevH",
-                                                         label = h5("SE on Prevalence (percentage points):"),
+                                                         label = h5("SE of Prevalence (percentage points):"),
                                                          value = 0.7),
                                                textInput("Inc",
                                                          label = h5("Incidence (% p.a.):"),
                                                          value = 2.33),
                                                textInput("SE_Inc",
-                                                         label = h5("SE on Incidence (percentage points):"),
+                                                         label = h5("SE of Incidence (percentage points):"),
                                                          value = 0.56)
                                              )
-                                           ),
-                                           wellPanel(
-                                             numericInput("n_bootstraps",
-                                                          label = h5("Bootstrapping Iterations:"),
-                                                          value = 100000,
-                                                          step = 10000,
-                                                          min = 10000,
-                                                          max = 500000)
                                            )
                                            ),
                                     column(5,
@@ -276,6 +268,14 @@ fluidPage(
                                                  )
                                                )
                                              )
+                                           ),
+                                           wellPanel(
+                                             numericInput("n_bootstraps",
+                                                          label = h5("Bootstrapping Iterations:"),
+                                                          value = 100000,
+                                                          step = 10000,
+                                                          min = 10000,
+                                                          max = 500000)
                                            )
                                            )
                                   )
