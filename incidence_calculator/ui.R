@@ -12,7 +12,7 @@
 library(shiny)
 
 fluidPage(
-  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [beta 6, 02/12/2017]"),
+  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [pre-release, 05/12/2017]"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
                 tabPanel("Estimate Incidence",
@@ -442,7 +442,23 @@ fluidPage(
                                     p("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.")
                          ),
                          br(),
-                         img(src='SACEMA_logo.jpg', align = "right")
+                         fluidRow(
+                           
+                           column(3,
+                                  img(src='sacema_logo.jpg', height = "100px", align = "right")
+                                  ),
+                           column(3,
+                                  img(src='imperial_logo.jpg', height = "100px", align = "right")
+                           ),
+                           column(3,
+                                  tags$style(type='text/css', "{margin-top: 35px;}"),
+                                  img(src='unaids_logo.gif', height = "100px", align = "right")
+                           ),
+                           column(2,
+                                  tags$style(type='text/css', "{margin-top: 35px;}"),
+                                  img(src='mrc_logo.png', height = "100px", align = "right")
+                           )
+                         )
                 )
     )
   )

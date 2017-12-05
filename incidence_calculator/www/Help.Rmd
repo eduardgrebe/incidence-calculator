@@ -40,10 +40,11 @@ The formats available within browser form based entry are:
 
 * *Raw survey counts* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', without regard to sample designs, weights, etc. Entering simple survey counts makes it possible to obtain a preliminary estimate while one has not fully resolved all issues with analysis accounting for sampling structure. This framing also provides a useful heuristic of conceiving the data as reflecting two successive (and in this limit, uncorrelated) experiments with binomially distributed outcomes:
 
-** The estimation of the prevalence of HIV, and
-** the estimation of the prevalence of recent infection amongst HIV positives.
+  * The estimation of the prevalence of HIV, and
+  * the estimation of the prevalence of recent infection amongst HIV positives.
 
 Note the explicit specification of number of completed recent infection ascertainments, to allow for incomplete coverage. Variances are inferred from the binomial distribution. Design effects can be entered (if one has a reasonable estimation of what these might be) to avoid being locked in to an overly optimistic incidence estimate variance.
+
 * *Prevalences*: of HIV, and of Recent Infection *amongst HIV positives* (plus explicitly specified variances and a correlation). This, noted above to be the most fundamental reduction of a survey data set, also has the simplest relation to the unstructured analysis in terms of raw survey counts. It is equivalence to providing, in addition to raw counts, the 'correctly' calculated design effects, and a correlation. (Incidentally, we expect the correlation of HIV prevalence and Prevalence of recent infection amongst HIV positives to be small in almost all cases)
 * *Population Level Proportions* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', and HIV Negatives - each normalised to the total population, rather than reporting the estimated proportion of recent infections directly as a proportion of all HIV positive cases as in the previous format. This also requires an appropriately generated full variance/covariance matrix between all four of these proportions, which is then used by the calculator to produce the net estimates of the preceding 'two prevalences' format.
 * *Population Level Totals* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', which are often naturally produced from analysis of data equipped with population weights. This is effectively equivalent to the population level proportions, which are simply normalised to the total population size.
