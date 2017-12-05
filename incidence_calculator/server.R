@@ -247,7 +247,6 @@ shinyServer(function(input, output){
         prev <- sum(input$P_Re, input$P_nonR, input$P_notT)
         prevR <- input$P_Re / sum(input$P_Re, input$P_nonR)
         
-        
         vcovmat <- matrix(nrow=4,ncol = 4)
         vcovmat[1,1] <- input$Var_P_R
         vcovmat[2,2] <- input$Var_P_nonR
@@ -293,19 +292,19 @@ shinyServer(function(input, output){
         
       } else if (input$data_type == 5) {
         
-        prev <- input$PrevH/100 
-        prev_se <- input$SE_PrevH/100
-        inc <- input$Inc/100
-        inc_se <- input$SE_Inc/100
+        prev <- input$PrevH_i/100 
+        prev_se <- input$SE_PrevH_i/100
+        inc <- input$Inc_i/100
+        inc_se <- input$SE_Inc_i/100
         
         
         
         
         inc_df <- dplyr::data_frame(
-          `Prev (%)` = round(input$PrevH,3),
-          `Prev SE` = input$SE_PrevH,
-          `Inc (%)*` = input$Inc,
-          `Inc SE` = input$SE_Inc,
+          `Prev (%)` = round(input$PrevH_i,3),
+          `Prev SE` = input$SE_PrevH_i,
+          `Inc (%)*` = input$Inc_i,
+          `Inc SE` = input$SE_Inc_i,
           Corr = inc / ((1-prev)*prev) * prev_se / inc_se
         )
         
