@@ -12,7 +12,7 @@
 library(shiny)
 
 fluidPage(
-  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) [pre-release, 05/12/2017]"),
+  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) v1.0"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
                 tabPanel("Estimate Incidence",
