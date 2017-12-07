@@ -55,6 +55,7 @@ I_EST <- function(prevH, prevR, mdri, frr, bigt) {
 # BOOTSTRAPPING EDF OF INPUT PARAMETERS TO incprops() FUNCTION
 BS_SURVEY_ESTS <- function(prevH, prevR, mdri, frr, bs_count, bs_var_prevH, bs_var_prevR,
                            bs_var_mdri, bs_var_frr, covar_HR, cor_HR) {
+  
   Mu <- c(prevH, prevR, mdri, frr)
   if (!is.null(cor_HR)) {covar_HR <- sqrt(bs_var_prevH * bs_var_prevR) * cor_HR}
   sigma <- matrix(c(bs_var_prevH, covar_HR, 0, 0, covar_HR, bs_var_prevR, 0, 0,
@@ -135,7 +136,7 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
   stopifnot(MDRI >= 0)
   stopifnot(RSE_MDRI <= 1 & RSE_MDRI >= 0)
   stopifnot(FRR <= 1 & FRR >= 0)
-  stopifnot(RSE_FRR <= 1 & RSE_FRR >= 0)
+  #stopifnot(RSE_FRR <= 1 & RSE_FRR >= 0)
   
   if (sum(BMest == c("same.test", "FRR.indep", "MDRI.FRR.indep")) == 0) {
     stop("BMest option must be same.test, FRR.indep, or MDRI.FRR.indep")
@@ -256,6 +257,7 @@ incprops <- function(PrevH, RSE_PrevH, PrevR, RSE_PrevR, Boot = FALSE, BS_Count 
     BS_Var_PrevR <- (RSE_PrevR * PrevR)^2
     BS_Var_MDRI <- (MDRI * RSE_MDRI)^2
     BS_Var_FRR <- (FRR * RSE_FRR)^2
+    
     
     DM_Var_PrevH <- rep(0, times = no_s)
     DM_Var_PrevR <- rep(0, times = no_s)

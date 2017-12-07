@@ -46,12 +46,32 @@ shinyServer(function(input, output){
         need(input$n_bootstraps <= 500000, "Bootstrapping iterations must be in the range [10,000,500,000]")
       )
       
+      #browser()
       RSE_MDRI <- input$SE_MDRI / input$MDRI
       MDRI <- input$MDRI
       
       FRR <- input$FRR / 100
-      RSE_FRR  <- ifelse(input$FRR == 0, 0, input$SE_FRR / input$FRR)
-      FRR<- ifelse(FRR==0,0.0000000001,FRR) # cheating
+      RSE_FRR <- input$SE_FRR / input$FRR
+      
+      if (RSE_FRR > 100000) {
+        output$warning2 <- renderText("Warning: Provided SE on FRR implies Relative Standard Error > 1,000%, RSE on FRR set to 1,000%")
+      } else {output$warning2 <- renderText("")}
+      
+      RSE_FRR <- ifelse(RSE_FRR > 100000, 100000, RSE_FRR) # cheating
+      
+      
+      FRR <- ifelse(FRR < 0.00001, 0.00001, FRR) # cheating
+      if (input$FRR <= 0.001) {
+        output$warning1 <- renderText("Warning: Provided FRR <= 0.001%, FRR set to 0.001%")
+      } else {output$warning1 <- renderText("")}
+      
+      
+      
+      #if (input$SE_FRR > input$FRR) {output$warning2 <- renderText("Warning: Provided SE on FRR > provided FRR, Relative Standard Error set to 1.")}
+      
+      if ((FRR * RSE_FRR)^2 == Inf) {
+        
+      }
       
       
       if (input$data_type == 1) {
