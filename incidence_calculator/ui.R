@@ -444,6 +444,8 @@ fluidPage(
                                       tags$li("Stefano Ongarello (FIND)")
                                     ),
                                     br(),
+                                    p(em("Thank you to Stefano Ongarello for identifying bugs.")),
+                                    br(),
                                     p(em(strong("Built using", a(strong("inctools"), href = "https://github.com/SACEMA/inctools", target = "_blank")))),
                                     br(),
                                     p(strong("Licence: GPL-3")),
