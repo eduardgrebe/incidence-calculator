@@ -12,7 +12,7 @@
 library(shiny)
 
 fluidPage(
-  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) v1.0"),
+  titlePanel("Prevalence and Incidence Calculator (UNAIDS RG) v1.01"),
   fluidRow(
     tabsetPanel(id = "tabset", type = "tabs",
                 tabPanel("Estimate Incidence",
@@ -45,6 +45,8 @@ fluidPage(
                                                           ),
                                                           selected = 1)
                                            ),
+                                           conditionalPanel(
+                                             condition = "input.data_type != 5",
                                            wellPanel(
                                              h3("Recency Test"),
                                              numericInput("MDRI",
@@ -78,6 +80,7 @@ fluidPage(
                                                           min = 180, 
                                                           max = 1095
                                              )
+                                           )
                                            )
                                            
                                     ),
@@ -344,6 +347,11 @@ fluidPage(
                                                conditionalPanel(
                                                  condition = "input.single_multiple == 1",
                                                  wellPanel(
+                                                   #if(!is.null(output$warning1)) {textOutput("warning1"),}
+                                                   #if(!is.null(output$warning2)) {textOutput("warning2"),}
+                                                   span(textOutput("warning1"), style="color:orange"),
+                                                   span(textOutput("warning2"), style="color:orange"),
+                                                   br(),
                                                    tableOutput("incidence_table"),
                                                    br(),
                                                    p("*per annum")
