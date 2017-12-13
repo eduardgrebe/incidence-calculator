@@ -96,7 +96,7 @@ Within *inctools*, there is provision for users to provide scale factors (design
 
 It should be noted that:
 
-*	Design Effects are mainly useful as heuristic estimates to be used when a survey is being designed (i.e. in calculations of power, sample size, etc). Once survey data is in hand, it makes more sense to analyse it by suitably adapted standard methods, to yield estimates, and a variance/covariance matrix, which do not specifically contain a reference to a sample size, and do not require a design effect adjustment. Hence, the prevalence/incidence web app does not provide access to underlying inctools uses of design effects.
+*	Design Effects are mainly useful as heuristic estimates to be used when a survey is being designed (i.e. in calculations of power, sample size, etc). Once survey data is in hand, it makes more sense to analyse it by suitably adapted standard methods, to yield estimates, and a variance/covariance matrix, which do not specifically contain a reference to a sample size, and do not require a design effect adjustment. Nevertheless, the prevalence/incidence web app provides some access to underlying inctools uses of design effects.
 *	There is no clear consensus on approach, and there are no mature tools, for estimating a priori design effect parameters for population based HIV surveys.
 *	The two design effects are logically independent parameters, which capture the effects of two logically independent processes (ascertaining HIV, and ascertain recent infection amongst HIV positive subjects).
 *	It is not appropriate to use design effects to scale the variances of the test property (MDRI and FRR) estimates, as these are not estimated in the incidence survey, but rather arise in the recency test development process.

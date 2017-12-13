@@ -12,7 +12,7 @@ A cross sectional survey leads to a core dataset with typical (germaine to the p
 * HIV status (-/+)
 * Recency Status (Non-recent/Recent)
 
-This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types, and there are standard R packages (like *survey*) which can do this. For the present application, which combines prevalence estimation with cross sectional incidence estimation based on markers of 'recent infection', the raw survey data can ultimately to be reduced, without loss of information, to
+This data will usually be processed by somewhat ad-hoc means, depending on what kind of sampling frame was employed, and what kinds of weights are available. The estimation can be somewhat generalized for certain standard sampling frame types, and there are standard R packages (like *survey*) which do this. For the present application, which combines prevalence estimation with cross sectional incidence estimation based on markers of 'recent infection', the raw survey data can ultimately to be reduced, without loss of information, to
 
 *	an estimate of HIV prevalence
 *	an estimate of the prevalence of ‘recent infection’ amongst those who are HIV positive.
@@ -26,13 +26,13 @@ We refer to this survey summary as the (fundamental) 'two prevalences' form. It 
 At a high level, the user decides to enter the survey data summary either by hand into the interface (one survey per transaction of the calculator), or by uploading a file (which makes it possible to provide estimates from multiple surveys in one transaction of the calculator).
 This choice is made in the top horizontal box of the *Estimate Incidence* tab. File based entry is currently implemented only for the fundamental 'two prevalences' (of HIV, and of Recent Infection among HIV Positives) form.
 
-Depending on the form/file choice, the page adapts to handle the transaction accordingly.
-If form based entry is selected, there is a further choice of five alternative estimate formats (explained in more detail below) of which the 'two prevalences' form is just one. Depending on the data format choice that has been made, the form further adapts to provide the appropriately labelled spaces to insert survey summaries of the chosen format.
+Depending on the *form or file* choice, the page adapts to handle the transaction accordingly.
+If form based entry is selected, there is a further choice of five alternative estimate formats (explained in more detail below) of which the 'two prevalences' form is just one. Depending on the data format choice that has been made, the form further adapts to provide the appropriately labelled spaces to insert survey summaries of the chosen format, and, when appropriate, spaces to insert recency test property estimates (MDRI and FRR).
 
 However survey data is entered, once the relevant internal transformations have been done, the calculator will primarily use the *inctools* function `incprops`, to report:
 
 * the (user provided) HIV Prevalence point estimate (as a percentage)
-* the (absolute) standarderror of the prevalence estimate (in percentage points)
+* the (absolute) standard error of the prevalence estimate (in percentage points)
 * an incidence point estimate (as a rate, expressed in percent infection risk per annum)
 * the correlation between the HIV Prevalence and Incidence estimates (a value between -1 and 1)
 
@@ -45,9 +45,9 @@ The formats available within browser form based entry are:
 
 Note the explicit specification of number of completed recent infection ascertainments, to allow for incomplete coverage. Variances are inferred from the binomial distribution. Design effects can be entered (if one has a reasonable estimation of what these might be) to avoid being locked in to an overly optimistic incidence estimate variance.
 
-* *Prevalences*: of HIV, and of Recent Infection *amongst HIV positives* (plus explicitly specified variances and a correlation). This, noted above to be the most fundamental reduction of a survey data set, also has the simplest relation to the unstructured analysis in terms of raw survey counts. It is equivalence to providing, in addition to raw counts, the 'correctly' calculated design effects, and a correlation. (Incidentally, we expect the correlation of HIV prevalence and Prevalence of recent infection amongst HIV positives to be small in almost all cases)
-* *Population Level Proportions* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', and HIV Negatives - each normalised to the total population, rather than reporting the estimated proportion of recent infections directly as a proportion of all HIV positive cases as in the previous format. This also requires an appropriately generated full variance/covariance matrix between all four of these proportions, which is then used by the calculator to produce the net estimates of the preceding 'two prevalences' format.
-* *Population Level Totals* of HIV positives who are 'recent', 'non recent' and 'not tested for recency', which are often naturally produced from analysis of data equipped with population weights. This is effectively equivalent to the population level proportions, which are simply normalised to the total population size.
+* *Prevalences*: of HIV, and of Recent Infection *amongst HIV positives* (plus explicitly specified variances and a correlation). This, noted above to be the most fundamental reduction of a survey data set, also has the simplest relation to the unstructured analysis in terms of raw survey counts. It is equivalent to providing, in addition to raw counts, the 'correctly' calculated design effects, and a correlation. (Incidentally, we expect the correlation of HIV prevalence and Prevalence of recent infection amongst HIV positives to be small in almost all cases)
+* *Population Level Proportions* of HIV positives who are 'recent', 'non recent', 'not tested for recency', and HIV Negatives - each normalised to the total population, rather than reporting the estimated proportion of recent infections directly as a proportion of all HIV positive cases as in the previous format. This also requires an appropriately generated full variance/covariance matrix between all four of these proportions, which is then used by the calculator to produce the net estimates of the preceding 'two prevalences' format.
+* *Population Level Totals* of HIV negatives and HIV positives who are 'recent', 'non recent' and 'not tested for recency', which are often naturally produced from analysis of data equipped with population weights. This is effectively equivalent to the population level proportions, which are simply normalised to the total population size.
 * *Prevalence and incidence estimates* that were previously produced from underlying survey data that is not currently to hand. The calculator adds the (noted above to be usually benign) assumption that the estimates of prevalence of HIV and of recent infection amongst HIV positives are uncorrelated, and then returns the prevalence/incidence correlation as its key output for use with Spectrum/EPP.
 
 
