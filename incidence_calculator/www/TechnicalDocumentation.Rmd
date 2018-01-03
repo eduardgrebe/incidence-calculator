@@ -100,3 +100,7 @@ It should be noted that:
 *	There is no clear consensus on approach, and there are no mature tools, for estimating a priori design effect parameters for population based HIV surveys.
 *	The two design effects are logically independent parameters, which capture the effects of two logically independent processes (ascertaining HIV, and ascertain recent infection amongst HIV positive subjects).
 *	It is not appropriate to use design effects to scale the variances of the test property (MDRI and FRR) estimates, as these are not estimated in the incidence survey, but rather arise in the recency test development process.
+
+## Release notes
+
+**Version 1.03**: Bootstrap resampling from truncated normal distribution to prevent negative values being drawn for prevalences, MDRI and FRR.
