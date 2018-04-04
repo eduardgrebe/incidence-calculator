@@ -60,8 +60,7 @@ BS_SURVEY_ESTS <- function(prevH, prevR, mdri, frr, bs_count, bs_var_prevH, bs_v
   if (!is.null(cor_HR)) {covar_HR <- sqrt(bs_var_prevH * bs_var_prevR) * cor_HR}
   sigma <- matrix(c(bs_var_prevH, covar_HR, 0, 0, covar_HR, bs_var_prevR, 0, 0,
                     0, 0, bs_var_mdri, 0, 0, 0, 0, bs_var_frr), nrow = 4, ncol = 4)
-  # bs_var_prevH, bs_var_prevR, and so on are...?empirical, observed variance of
-  # variable? returns bootstraps of prevH, prevR, mdri, frr
+  
   BS_RootEst <- tmvtnorm::rtmvnorm(n = bs_count,
                                     mean = mu,
                                     sigma = sigma,
