@@ -36,3 +36,4 @@ vignettes/*.pdf
 
 #Mac stuff
 .DS_Store
+incidence_calculator/rsconnect/shinyapps.io/incidence/incidence_calculator.dcf
